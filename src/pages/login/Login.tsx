@@ -5,7 +5,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import "../../styles/login.css";
 import Button from "../../components/Button";
 import { UserTokenRespnse } from "../../vite-env";
-
+import FetchBuilder from "../../utils/FetchBuilder";
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -14,21 +14,16 @@ export default function Login() {
   const [, setUsernameItem] = useLocalStorage("username", "");
   const [isWarning, setIsWarning] = useState(false);
 
-  async function handleSignIn(
-    username: string,
-    password: string,
-  ) {
+  async function handleSignIn(username: string, password: string) {
     const url: string = "http://localhost:8080/api/v1/auth/login";
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
+      const builder = new FetchBuilder();
+      const response = await builder
+        .post(url)
+        .body({ username: username, password: password })
+        .applicationJson()
+        .fetch();
 
       let user: UserTokenRespnse | null = null;
 

@@ -1,13 +1,14 @@
 import "../../styles/home.css";
-import HomeHeader from "./HomeNavbar";
+import HomeMain from "./HomeMain";
+import HomeNavbar from "./HomeNavbar";
 
 export default function Home() {
 
   return (
     <div className="home home--bg-white">
-      <HomeHeader />
+      <HomeNavbar />
       <aside className="left-aside"></aside>
-      <main className="main"></main>
+      <HomeMain />
       <aside className="right-aside"></aside>
     </div>
   );

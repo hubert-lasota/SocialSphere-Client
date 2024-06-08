@@ -11,7 +11,6 @@ type InputProps = {
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const { className, type, placeholder, value, onChange, onFocus } = props;
-  console.log(className);
   return (
     <input
       ref={ref}

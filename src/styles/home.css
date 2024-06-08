@@ -24,6 +24,11 @@
   justify-content: space-between;
 }
 
+.home__nav--brd-btm-grey {
+  box-shadow: 0px 1px 13px 1px rgba(208, 208, 208, 1);
+  border-bottom: 1px solid #afafaf86;
+}
+
 .home__nav--bg-white {
   background-color: #f7f7f7;
 }
@@ -164,7 +169,11 @@
   grid-area: rg;
 }
 
+
+
+
+
 /*    MAIN    */
-.home .main {
+.home__main {
   grid-area: mn;
 }

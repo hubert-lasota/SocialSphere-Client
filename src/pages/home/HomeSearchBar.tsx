@@ -30,6 +30,8 @@ export default function HomeSearchBar() {
 
       if (users && users.users) {
         setSearchedUsers(users.users);
+      } else {
+        setIsSearchUsersListVisible(false);
       }
     } catch (error) {
       console.log("Error occured whiel searching friends: ", error);
@@ -71,7 +73,6 @@ export default function HomeSearchBar() {
 
   function handleInputFocus() {
     setInputString(inputStringOnFocus);
-    setIsSearchUsersListVisible(true);
   }
 
   return (
