@@ -9,22 +9,24 @@ import Button from "../../components/Button";
 type LoginFormProps = {
   isWarning: boolean;
 
-  login: (
+  handleSignIn: (
     username: string,
     password: string,
-    event: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
 };
 
 export default function LoginForm(props: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { isWarning, login } = props;
+  const { isWarning, handleSignIn } = props;
 
   return (
     <form
       className="login__sign-in"
-      onSubmit={(event) => login(username, password, event)}
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSignIn(username, password);
+      }}
     >
       <div className="sign-in__header sign-in__header--fslarge">Sign in!</div>
       <div className="sign-in__username sign-in__username--fsmd sign-in__username--border-white">

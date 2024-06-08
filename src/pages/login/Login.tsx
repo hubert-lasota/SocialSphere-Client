@@ -4,18 +4,8 @@ import LoginForm from "./LoginForm";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import "../../styles/login.css";
 import Button from "../../components/Button";
+import { UserTokenRespnse } from "../../vite-env";
 
-type UserTokenRespnse = {
-  login: {
-    userId: number;
-    username: string;
-    jwt: string;
-  };
-
-  code: string;
-  message: string;
-  success: boolean;
-};
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -24,12 +14,10 @@ export default function Login() {
   const [, setUsernameItem] = useLocalStorage("username", "");
   const [isWarning, setIsWarning] = useState(false);
 
-  async function login(
+  async function handleSignIn(
     username: string,
     password: string,
-    event: React.FormEvent<HTMLFormElement>
   ) {
-    event.preventDefault();
     const url: string = "http://localhost:8080/api/v1/auth/login";
 
     try {
@@ -76,7 +64,7 @@ export default function Login() {
         />
       </div>
 
-      <LoginForm isWarning={isWarning} login={login} />
+      <LoginForm isWarning={isWarning} handleSignIn={handleSignIn} />
       {isAuthorized ? <Navigate to="/home" /> : <></>}
     </div>
   );
