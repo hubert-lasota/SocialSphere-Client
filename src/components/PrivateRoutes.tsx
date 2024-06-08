@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import useLocalStorage from '../hooks/useLocalStorage'
-import { UserTokenRequest } from '../vite-env';
-import validateUserToken from '../utils/validateUserToken';
-import { Outlet, Navigate } from 'react-router-dom';
-import Home from '../pages/Home';
-import Loading from '../pages/Loading';
-
-
+import React, { useEffect, useState } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { UserTokenRequest } from "../vite-env";
+import validateUserToken from "../utils/validateUserToken";
+import { Outlet, Navigate } from "react-router-dom";
+import Home from "../pages/home/Home";
+import Loading from "../pages/Loading";
 
 export default function PrivateRoutes() {
   const [jwtItem, setJwtItem] = useLocalStorage("jwt", "");
@@ -19,20 +17,15 @@ export default function PrivateRoutes() {
     const isAuth: boolean = await validateUserToken(userToken);
     setIsAuthorized(isAuth);
     setLoading(false);
-  } 
-
-  useEffect(() => {
-   checkIsAuthorized();
-  }, []);
-
-
-
-  if(loading) {
-    return <Loading />
   }
 
+  useEffect(() => {
+    checkIsAuthorized();
+  }, []);
 
-  return (
-    isAuthorized ? <Home /> : <Navigate to="/login"/>
-  )
+  if (loading) {
+    return <Loading />;
+  }
+
+  return isAuthorized ? <Home /> : <Navigate to="/login" />;
 }

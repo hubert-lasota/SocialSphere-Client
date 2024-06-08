@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
-import useLocalStorage from "../hooks/useLocalStorage";
-import "../styles/login.css"
+import useLocalStorage from "../../hooks/useLocalStorage";
+import "../../styles/login.css";
+import Button from "../../components/Button";
 
 type UserTokenRespnse = {
   login: {
@@ -42,13 +43,12 @@ export default function Login() {
       });
 
       let user: UserTokenRespnse | null = null;
-   
+
       if (response.ok) {
         user = await response.json();
       }
-      
+
       if (user?.success) {
-        console.log(user)
         setIsAuthorized(true);
         setJwtItem(user.login.jwt);
         setUserIdItem(user.login.userId);
@@ -63,15 +63,17 @@ export default function Login() {
     }
   }
 
-
   return (
     <div className="login">
-      <div className="login-sign-up">
-        <div className="login-sign-up-header">
+      <div className="login__sign-up">
+        <div className="sign-up__header sign-up__header--fwhite sign-up__header--fslarge">
           <p>Register with username and password</p>
           <p>to be able to use Social Sphere</p>
         </div>
-        <button>SIGN UP</button>
+        <Button
+          className="sign-up__btn sign-up__btn--white sign-up__btn--fsmd"
+          text="SIGN UP"
+        />
       </div>
 
       <LoginForm isWarning={isWarning} login={login} />
