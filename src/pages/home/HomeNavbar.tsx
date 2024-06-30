@@ -1,7 +1,7 @@
 import { faS } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import HomeHeaderRightSide from "./HomeNavbarRightSide";
+import HomeNavbarRightSide from "./HomeNavbarRightSide";
 import HomeSearchBar from "./HomeSearchBar";
 
 export default function HomeNavbar() {
@@ -12,8 +12,8 @@ export default function HomeNavbar() {
           <FontAwesomeIcon icon={faS} size="3x" />
         </Link>
       </div>
-      <HomeSearchBar />
-      <HomeHeaderRightSide />
+      <HomeSearchBar /> 
+      <HomeNavbarRightSide />
     </nav>
   );
 }

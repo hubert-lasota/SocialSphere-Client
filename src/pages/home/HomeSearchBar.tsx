@@ -2,14 +2,16 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import Input from "../../components/Input";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import { SearchUsersList } from "../../vite-env";
+import { SearchUsers } from "../../types/user.types";
+import userService from "../../services/userService";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
   const [inputStringOnFocus, setInputStringOnFocus] = useState("");
-  const [searchedUsers, setSearchedUsers] = useState<SearchUsersList>([]);
+  const [searchedUsers, setSearchedUsers] = useState<SearchUsers[]>([
+    { userId: -1, firstName: "", lastName: "", profilePicture: null },
+  ]);
   const [userId] = useLocalStorage("user_id", "");
   const [jwt] = useLocalStorage("jwt", "");
   const [isSearchUsersListVisible, setIsSearchUsersListVisible] =
@@ -19,22 +21,11 @@ export default function HomeSearchBar() {
 
   async function handleSearchFriends(searchInputString: string) {
     const maxSize = "5";
-    const url: string = `http://localhost:8080/api/v1/user/search?userId=${userId}&containsString=${searchInputString}&maxSize=${maxSize}`;
-    try {
-      const response: Response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      const users = await response.json();
-
-      if (users && users.users) {
-        setSearchedUsers(users.users);
-      } else {
-        setIsSearchUsersListVisible(false);
-      }
-    } catch (error) {
-      console.log("Error occured whiel searching friends: ", error);
+    const users = await userService.searchUsers(searchInputString, maxSize);
+    if (users && users.users) {
+      setSearchedUsers(users.users);
+    } else {
+      setIsSearchUsersListVisible(false);
     }
   }
 
@@ -82,7 +73,7 @@ export default function HomeSearchBar() {
         size="lg"
         className="search-bar__icon search-bar__icon--navy"
       />
-      <Input
+      <input
         className="search-bar__input search-bar__input--bg-grey search-bar__input--fsmedium"
         ref={inputRef}
         placeholder="Search friends"

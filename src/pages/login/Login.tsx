@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import "../../styles/login.css";
-import Button from "../../components/Button";
-import { UserTokenRespnse } from "../../vite-env";
-import FetchBuilder from "../../utils/FetchBuilder";
+import authService from "../../services/authService";
+import { LoginResponse } from "../../types/auth.types";
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -15,34 +14,20 @@ export default function Login() {
   const [isWarning, setIsWarning] = useState(false);
 
   async function handleSignIn(username: string, password: string) {
-    const url: string = "http://localhost:8080/api/v1/auth/login";
+    const response: LoginResponse = await authService.login({
+      username: username,
+      password: password,
+    });
 
-    try {
-      const builder = new FetchBuilder();
-      const response = await builder
-        .post(url)
-        .body({ username: username, password: password })
-        .applicationJson()
-        .fetch();
-
-      let user: UserTokenRespnse | null = null;
-
-      if (response.ok) {
-        user = await response.json();
-      }
-
-      if (user?.success) {
-        setIsAuthorized(true);
-        setJwtItem(user.login.jwt);
-        setUserIdItem(user.login.userId);
-        setUsernameItem(user.login.username);
-      } else {
-        setIsAuthorized(false);
-        setIsWarning(true);
-      }
-    } catch (error) {
+    if (response.success) {
+      const { userId, username, jwt } = response.login;
+      setUserIdItem(userId);
+      setUsernameItem(username);
+      setJwtItem(jwt);
+      setIsAuthorized(true);
+    } else {
+      setIsWarning(true);
       setIsAuthorized(false);
-      console.log("Error occured while login", error);
     }
   }
 
@@ -53,10 +38,9 @@ export default function Login() {
           <p>Register with username and password</p>
           <p>to be able to use Social Sphere</p>
         </div>
-        <Button
-          className="sign-up__btn sign-up__btn--white sign-up__btn--fsmd"
-          text="SIGN UP"
-        />
+        <button className="sign-up__btn sign-up__btn--white sign-up__btn--fsmd">
+          SIGN UP
+        </button>
       </div>
 
       <LoginForm isWarning={isWarning} handleSignIn={handleSignIn} />

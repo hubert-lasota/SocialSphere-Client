@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { UserTokenRequest } from "../vite-env";
-import validateUserToken from "../utils/validateUserToken";
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Home from "../pages/home/Home";
-import Loading from "../pages/Loading";
+import Loading from "./Loading";
+import "../styles/loading.css";
+import { LoginTokenRequest } from "../types/auth.types";
+import authService from "../services/authService";
 
 export default function PrivateRoutes() {
-  const [jwtItem, setJwtItem] = useLocalStorage("jwt", "");
-  const [usernameItem, setUsernameItem] = useLocalStorage("username", "");
+  const [ jwtItem ] = useLocalStorage("jwt", "");
+  const [ usernameItem ] = useLocalStorage("username", "");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
 
   async function checkIsAuthorized() {
-    let userToken: UserTokenRequest = { username: usernameItem, jwt: jwtItem };
-    const isAuth: boolean = await validateUserToken(userToken);
-    setIsAuthorized(isAuth);
-    setLoading(false);
+    const userToken: LoginTokenRequest = { username: usernameItem, jwt: jwtItem };
+    const loginResponse = await authService.validateUserToken(userToken);
+    if(loginResponse.success) {
+      setIsAuthorized(true);
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -24,7 +27,7 @@ export default function PrivateRoutes() {
   }, []);
 
   if (loading) {
-    return <Loading />;
+    return <Loading className="spinner"/>;
   }
 
   return isAuthorized ? <Home /> : <Navigate to="/login" />;

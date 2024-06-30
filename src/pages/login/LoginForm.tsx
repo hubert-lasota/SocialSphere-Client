@@ -1,24 +1,30 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation, faLock } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
+
 import "../../styles/login.css";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+
+import UsernameInput from "../../components/input/UsernameInput";
+import PasswordInput from "../../components/input/PasswordInput";
+import SubmitButton from "../../components/button/SubmitButton";
 
 type LoginFormProps = {
   isWarning: boolean;
-
-  handleSignIn: (
-    username: string,
-    password: string,
-  ) => Promise<void>;
+  handleSignIn: (username: string, password: string) => void;
 };
 
 export default function LoginForm(props: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { isWarning, handleSignIn } = props;
+
+  function handleChangeUsername(event: React.ChangeEvent<HTMLInputElement>) {
+    setUsername(event.target.value);
+  }
+
+  function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(event.target.value);
+  }
 
   return (
     <form
@@ -29,37 +35,22 @@ export default function LoginForm(props: LoginFormProps) {
       }}
     >
       <div className="sign-in__header sign-in__header--fslarge">Sign in!</div>
-      <div className="sign-in__username sign-in__username--fsmd sign-in__username--border-white">
-        <FontAwesomeIcon
-          icon={faUser}
-          className="sign-in__username-icon sign-in__username-icon--navy"
-        />
-        <Input
-          className="sign-in__username-input sign-in__username-input--bg-white"
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div className="sign-in__password sign-in__password--fsmd sign-in__password--border-white">
-        <FontAwesomeIcon
-          icon={faLock}
-          className="sign-in__password-icon sign-in__password-icon--navy"
-        />
-        <Input
-          className="sign-in__password-input sign-in__password-input--bg-white"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <Button
+      <UsernameInput
+        username={username}
+        handleChangeUsername={handleChangeUsername}
+      />
+      <PasswordInput
+        password={password}
+        handleChangePassword={handleChangePassword}
+      />
+      <button
         className="sign-in__btn sign-in__btn--fslg sign-in__btn--fwhite sign-in__btn--bgcolor-navy"
         type="submit"
-        text="SIGN IN"
-      />
+      >
+       Sign in
+      </button>
+      {/* <SubmitButton text="SIGN IN" /> */}
+
       {isWarning ? (
         <div className="sign-in__warning">
           <FontAwesomeIcon
