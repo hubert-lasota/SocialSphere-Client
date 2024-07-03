@@ -128,6 +128,7 @@ export default function PostList(props: PostListProps) {
 
   return posts.map((post) => (
     <PostComponent
+      key={post.id}
       id={post.id}
       userId={post.userId}
       profilePictureSrc={createProfilePicutreSrc(

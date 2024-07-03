@@ -5,6 +5,7 @@ import {
   faComment,
 } from "@fortawesome/free-regular-svg-icons";
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 type PostProps = {
   id: number;
@@ -20,16 +21,20 @@ type PostProps = {
 
 export default function Post(props: PostProps, ) {
   const { id, userId, profilePictureSrc, firstName, lastName, content, likeCount, commentCount } = props;
+  const navigate = useNavigate();
   
-  
+  function handleGoOnUserPage(userId: number) {
+    navigate(`/user/${userId}`);
+  }
+
   return (
     <div key={id} className="main__post main__post--bg-white">
       <div className="main__post-header">
         <img
-          data-userId = {userId}
           src={profilePictureSrc}
           alt="profile"
           className="main__post-header__profile-picture"
+          onClick={() => handleGoOnUserPage(userId)}
         />
         <div className="main__post-header__name">
           <span className="main__post-header__name-text main__post-header__name-text--fsmd main__post-header__name-text--grey ">

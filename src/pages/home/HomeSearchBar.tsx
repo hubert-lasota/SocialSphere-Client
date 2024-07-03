@@ -2,9 +2,9 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import useLocalStorage from "../../hooks/useLocalStorage";
 import { SearchUsers } from "../../types/user.types";
 import userService from "../../services/userService";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
@@ -12,12 +12,13 @@ export default function HomeSearchBar() {
   const [searchedUsers, setSearchedUsers] = useState<SearchUsers[]>([
     { userId: -1, firstName: "", lastName: "", profilePicture: null },
   ]);
-  const [userId] = useLocalStorage("user_id", "");
-  const [jwt] = useLocalStorage("jwt", "");
   const [isSearchUsersListVisible, setIsSearchUsersListVisible] =
     useState(false);
 
+  const navigate = useNavigate();
+
   const inputRef = useRef<HTMLInputElement>(null);
+  const userListRef = useRef<HTMLDivElement>(null);
 
   async function handleSearchFriends(searchInputString: string) {
     const maxSize = "5";
@@ -30,7 +31,7 @@ export default function HomeSearchBar() {
   }
 
   useEffect(() => {
-    if (inputString) {
+    if (inputString && inputString.length > 0) {
       handleSearchFriends(inputString);
       setIsSearchUsersListVisible(true);
       inputRef.current?.classList.add(
@@ -39,11 +40,20 @@ export default function HomeSearchBar() {
       );
     } else {
       setIsSearchUsersListVisible(false);
+      inputRef.current?.classList.remove(
+        "search-bar__input--no-bdr-btm",
+        "search-bar__input--bg-white"
+      );
     }
   }, [inputString]);
 
   function handleClickOutsideSearchBar(event: MouseEvent) {
-    if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(event.target as Node) &&
+      userListRef.current &&
+      !userListRef.current.contains(event.target as Node)
+    ) {
       setIsSearchUsersListVisible(false);
       setInputString("");
       setSearchedUsers([]);
@@ -66,6 +76,10 @@ export default function HomeSearchBar() {
     setInputString(inputStringOnFocus);
   }
 
+  function handleGoOnUserProfile(userId: number) {
+    navigate(`/user/${userId}`);
+  }
+
   return (
     <div className="home__search-bar">
       <FontAwesomeIcon
@@ -74,8 +88,8 @@ export default function HomeSearchBar() {
         className="search-bar__icon search-bar__icon--navy"
       />
       <input
-        className="search-bar__input search-bar__input--bg-grey search-bar__input--fsmedium"
         ref={inputRef}
+        className="search-bar__input search-bar__input--bg-grey search-bar__input--fsmedium"
         placeholder="Search friends"
         type="text"
         value={inputString}
@@ -87,7 +101,10 @@ export default function HomeSearchBar() {
       />
 
       {searchedUsers && isSearchUsersListVisible ? (
-        <div className="search-bar__user-list search-bar__user-list--bg-white">
+        <div
+          ref={userListRef}
+          className="search-bar__user-list search-bar__user-list--bg-white"
+        >
           {searchedUsers.map((u) => {
             let profilePictureUrl = "src/assets/favicon.png";
             if (u.profilePicture) {
@@ -95,8 +112,12 @@ export default function HomeSearchBar() {
             }
             const uniqueKey = uuidv4();
             return (
-              <div key={uniqueKey} className="user-list__line ">
-                <img src={profilePictureUrl} className="user-list__line-img " />
+              <div
+                key={uniqueKey}
+                className="user-list__line"
+                onClick={() => handleGoOnUserProfile(u.userId)}
+              >
+                <img src={profilePictureUrl} className="user-list__line-img" />
                 <div className="user-list__line-name">
                   <p className="user-list__line-text">{u.firstName}</p>
                   <p className="user-list__line-text">{u.lastName}</p>

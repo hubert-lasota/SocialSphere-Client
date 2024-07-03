@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Home from "../pages/home/Home";
 import Loading from "./Loading";
 import "../styles/loading.css";
@@ -30,5 +30,5 @@ export default function PrivateRoutes() {
     return <Loading className="spinner"/>;
   }
 
-  return isAuthorized ? <Home /> : <Navigate to="/login" />;
+  return isAuthorized ? <Outlet /> : <Navigate to="/login" />;
 }
