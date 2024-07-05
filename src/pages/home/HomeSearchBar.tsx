@@ -1,10 +1,10 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { SearchUsers } from "../../types/user.types";
 import userService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import styles from "./home.module.css";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
@@ -35,14 +35,14 @@ export default function HomeSearchBar() {
       handleSearchFriends(inputString);
       setIsSearchUsersListVisible(true);
       inputRef.current?.classList.add(
-        "search-bar__input--no-bdr-btm",
-        "search-bar__input--bg-white"
+        styles["search-bar__input--no-bdr-btm"],
+        styles["search-bar__input--bg-white"]
       );
     } else {
       setIsSearchUsersListVisible(false);
       inputRef.current?.classList.remove(
-        "search-bar__input--no-bdr-btm",
-        "search-bar__input--bg-white"
+        styles["search-bar__input--no-bdr-btm"],
+        styles["search-bar__input--bg-white"]
       );
     }
   }, [inputString]);
@@ -58,8 +58,8 @@ export default function HomeSearchBar() {
       setInputString("");
       setSearchedUsers([]);
       inputRef.current?.classList.remove(
-        "search-bar__input--no-bdr-btm",
-        "search-bar__input--bg-white"
+        styles["search-bar__input--no-bdr-btm"],
+        styles["search-bar__input--bg-white"]
       );
     }
   }
@@ -81,15 +81,15 @@ export default function HomeSearchBar() {
   }
 
   return (
-    <div className="home__search-bar">
+    <div className={styles["home__search-bar"]}>
       <FontAwesomeIcon
         icon={faMagnifyingGlass}
         size="lg"
-        className="search-bar__icon search-bar__icon--navy"
+        className={`${styles["search-bar__icon"]} ${styles["search-bar__icon--navy"]}`}
       />
       <input
         ref={inputRef}
-        className="search-bar__input search-bar__input--bg-grey search-bar__input--fsmedium"
+        className={`${styles["search-bar__input"]} ${styles["search-bar__input--bg-grey"]} ${styles["search-bar__input--fsmd"]}`}
         placeholder="Search friends"
         type="text"
         value={inputString}
@@ -103,24 +103,25 @@ export default function HomeSearchBar() {
       {searchedUsers && isSearchUsersListVisible ? (
         <div
           ref={userListRef}
-          className="search-bar__user-list search-bar__user-list--bg-white"
+          className={`${styles["search-bar__user-list"]} ${styles["search-bar__user-list--bg-white"]}`}
         >
           {searchedUsers.map((u) => {
-            let profilePictureUrl = "src/assets/favicon.png";
+            let profilePictureUrl: string;
             if (u.profilePicture) {
               profilePictureUrl = `data:image/png;base64,${u.profilePicture}`;
+            } else {
+              profilePictureUrl = "src/assets/favicon.png";
             }
-            const uniqueKey = uuidv4();
             return (
               <div
-                key={uniqueKey}
-                className="user-list__line"
+                key={u.userId}
+                className={styles["user-list__line"]}
                 onClick={() => handleGoOnUserProfile(u.userId)}
               >
-                <img src={profilePictureUrl} className="user-list__line-img" />
-                <div className="user-list__line-name">
-                  <p className="user-list__line-text">{u.firstName}</p>
-                  <p className="user-list__line-text">{u.lastName}</p>
+                <img src={profilePictureUrl} className={styles["user-list__line__img"]} />
+                <div className={styles["user-list__line__name"]}>
+                  <p className={styles["line__name__text"]}>{u.firstName}</p>
+                  <p className={styles["line__name__text"]}>{u.lastName}</p>
                 </div>
               </div>
             );

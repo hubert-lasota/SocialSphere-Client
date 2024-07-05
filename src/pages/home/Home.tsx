@@ -1,14 +1,12 @@
-import "../../styles/home.css";
-import "../../styles/loading.css";
 import HomeLeftAside from "./HomeLeftAside";
 import HomeMain from "./HomeMain";
 import HomeNavbar from "./HomeNavbar";
 import HomeRightAside from "./HomeRightAside";
+import styles from "./home.module.css";
 
 export default function Home() {
-
   return (
-    <div className="home home--bg-white">
+    <div className={`${styles["home"]} ${styles["home--bg-white"]}`}>
       <HomeNavbar />
       <HomeLeftAside />
       <HomeMain />

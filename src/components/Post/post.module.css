@@ -1,0 +1,140 @@
+.post {
+  margin-bottom: 5rem;
+  border-radius: 0.8rem;
+  width: 56%;
+}
+
+.post:last-child {
+  margin-bottom: 0;
+}
+
+.post--bg-white {
+  background-color: #f7f7f7;
+  box-shadow: 0px 0px 11px 5px rgba(221, 221, 221, 1);
+}
+
+.post__header {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #dddddd86;
+}
+
+.header__profile-picture {
+  display: inline-block;
+  width: 4rem;
+  height: auto;
+  border-radius: 50%;
+}
+
+.header__profile-picture:hover {
+  cursor: pointer;
+}
+
+.header__name {
+  display: inline-block;
+  padding-left: 1rem;
+}
+
+.header__name__text {
+}
+
+.header__name__text:first-child {
+  margin-right: 0.6rem;
+}
+
+.header__name__text--fsmd {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.header__name__text--grey {
+  color: rgb(65, 59, 59);
+}
+
+.post__content {
+  padding: 2rem 1.5rem;
+}
+
+.content__text--fsmd {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.content__img-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+
+.img-container__img {
+  display: block;
+}
+
+.img-container__img-one {
+  height: auto;
+  flex-basis: 100%;
+}
+
+.img-container__img-two {
+  flex-basis: 50%;
+  height: auto;
+}
+
+.img-container__img-three-first-row {
+  flex-basis: 50%;
+  height: auto;
+}
+
+.img-container__img-three-second-row {
+  flex-basis: 100%;
+  height: auto;
+  aspect-ratio: 4 / 2;
+}
+
+.img-container__img-four {
+  height: auto;
+  flex-basis: 50%;
+}
+
+.img-container__more {
+  flex-basis: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(128, 128, 128, 0.425);
+}
+
+.img-container__more__text {
+  font-size: 1.5rem;
+}
+
+.post__footer {
+  border-top: 1px solid #dddddd86;
+  display: flex;
+  /* padding: 1rem 0; */
+}
+
+.footer__like {
+  flex-basis: 50%;
+}
+
+.footer__like:hover {
+  cursor: pointer;
+}
+
+.like__icon {
+  display: inline;
+}
+
+.like__filled-icon--red {
+  color: rgb(226, 4, 4);
+}
+
+.like__text {
+}
+
+.footer__comment {
+  flex-basis: 50%;
+}

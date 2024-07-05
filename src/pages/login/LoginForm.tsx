@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
-
-import "../../styles/login.css";
-
-import UsernameInput from "../../components/input/UsernameInput";
-import PasswordInput from "../../components/input/PasswordInput";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import UsernameInput from "../../components/input/UsernameInput/UsernameInput";
+import PasswordInput from "../../components/input/PasswordInput/PasswordInput";
+import styles from "./login.module.css";
 import SubmitButton from "../../components/button/SubmitButton";
 
 type LoginFormProps = {
@@ -28,37 +26,36 @@ export default function LoginForm(props: LoginFormProps) {
 
   return (
     <form
-      className="login__sign-in"
+      className={styles["login__sign-in"]}
       onSubmit={(event) => {
         event.preventDefault();
         handleSignIn(username, password);
       }}
     >
-      <div className="sign-in__header sign-in__header--fslarge">Sign in!</div>
+      <div
+        className={`${styles["sign-in__header"]} ${styles["sign-in__header--fslarge"]}`}
+      >
+        Sign in!
+      </div>
       <UsernameInput
         username={username}
         handleChangeUsername={handleChangeUsername}
       />
       <PasswordInput
         password={password}
+        placeholder="Password"
         handleChangePassword={handleChangePassword}
       />
-      <button
-        className="sign-in__btn sign-in__btn--fslg sign-in__btn--fwhite sign-in__btn--bgcolor-navy"
-        type="submit"
-      >
-       Sign in
-      </button>
-      {/* <SubmitButton text="SIGN IN" /> */}
+      <SubmitButton text="SIGN IN" />
 
       {isWarning ? (
-        <div className="sign-in__warning">
+        <div className={styles["sign-in__warning"]}>
           <FontAwesomeIcon
             icon={faCircleExclamation}
-            className="sign-in__warning-icon sign-in__warning-icon--red"
+            className={`${styles["warning__icon"]} ${styles["warning__icon--red"]}`}
             size="2x"
           />
-          <span className="sign-in__warning-text--red sign-in__warning-text--fslarge">
+          <span className={`${styles["warning__text"]} ${styles["warning__text--red"]} ${styles["warning__text--fslarge"]}`}>
             Invalid credentials. Try again!
           </span>
         </div>

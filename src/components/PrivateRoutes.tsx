@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { Navigate, Outlet } from "react-router-dom";
-import Home from "../pages/home/Home";
-import Loading from "./Loading";
-import "../styles/loading.css";
+import Loading from "./Loading/Loading";
 import { LoginTokenRequest } from "../types/auth.types";
 import authService from "../services/authService";
 

@@ -19,4 +19,13 @@ export interface Post {
   images: Uint8Array[];
   likeCount: number;
   commentCount: number;
+  isLiked: boolean
 };
+
+export interface PostLikeResponse {
+  postId: number,
+  userId: number,
+  code: string,
+  message: string,
+  success: boolean
+}

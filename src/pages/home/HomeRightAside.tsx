@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import userService from "../../services/userService";
 import { Friend, FriendPage } from "../../types/user.types";
 import { useNavigate } from "react-router-dom";
+import styles from "./home.module.css";
 
 export default function HomeRightAside() {
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -23,9 +24,9 @@ export default function HomeRightAside() {
   }
 
   return (
-    <aside className="home__right-aside">
-      <div className="home__right-aside__friends">
-        <div className="home__right-aside__friends-header home__right-aside__friends-header--fslg">
+    <aside className={styles["home__right-aside"]}>
+      <div className={styles["right-aside__friends"]}>
+        <div className={`${styles["friends__header"]} ${styles["friends__header--fslg"]}`}>
           Friends
         </div>
         {friends.length > 0 ? (
@@ -35,19 +36,19 @@ export default function HomeRightAside() {
             return (
               <div
                 key={friend.user.id}
-                className="home__right-aside__friends-line"
+                className={styles["friends__line"]}
                 onClick={() => handleGoOnUserPage(friend.user.id)}
               >
                 <img
                   src={profilePicutreUrl}
                   alt="profile"
-                  className="right-aside__friends-profile-picture"
+                  className={styles["friends__line__profile-picture"]}
                 />
-                <div className="right-aside__friends-name">
-                  <span className="right-aside__friends-first-name right-aside__friends-first-name--fsmd">
+                <div className={styles["friends__line__name"]}>
+                  <span className={`${styles["friends__line__name__first-name"]} ${styles["friends__line__name__first-name--fsmd"]}`}>
                     {friend.userProfile.firstName}
                   </span>
-                  <span className="right-aside__friends-last-name right-aside__friends-last-name--fsmd">
+                  <span className={`${styles["friends__line__name__last-name"]} ${styles["friends__line__name__last-name--fsmd"]}`}>
                     {friend.userProfile.lastName}
                   </span>
                 </div>

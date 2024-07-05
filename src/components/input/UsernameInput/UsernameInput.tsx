@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
+import styles from "./username-input.module.css";
 
 type UsernameInputProps = {
   username: string;
@@ -9,17 +10,18 @@ type UsernameInputProps = {
 
 export default function UsernameInput(props: UsernameInputProps) {
   const { username, handleChangeUsername } = props;
-
   return (
-    <div className="sign-in__password sign-in__password--fsmd sign-in__password--border-white">
+    <div
+      className={`${styles["username"]} ${styles["username--fsmd"]} ${styles["username--border-white"]}`}
+    >
       <FontAwesomeIcon
         icon={faUser}
-        className="sign-in__username-icon sign-in__username-icon--navy"
+        className={`${styles["username__icon"]} ${styles["username__icon--navy"]}`}
       />
 
       <input
         type="text"
-        className="sign-in__username-input sign-in__username-input--bg-white"
+        className={`${styles["username__input"]} ${styles["username__input--bg-white"]}`}
         placeholder="Username"
         value={username}
         onChange={handleChangeUsername}

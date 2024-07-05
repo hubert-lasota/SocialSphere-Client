@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
-
-import "../styles/image-slider.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons/faX";
+import "./image-slider.css";
 
 type ImageSliderProps = {
   imageUrls: string[];

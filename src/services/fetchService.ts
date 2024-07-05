@@ -12,6 +12,12 @@ interface FetchService {
     headers?: [string, string][],
     responseFormat?: ResponseFormat
   ) => Promise<any>;
+  deleteRequest: (
+    url: string,
+    params?: UrlParameter[],
+    headers?: [string, string][],
+    responseFormat?: ResponseFormat
+  ) => Promise<any>;
 }
 
 export interface UrlParameter {
@@ -35,8 +41,8 @@ function get(
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
-  const requestInit: RequestInit = { headers: finalHeaders, method: "GET"};
-  
+  const requestInit: RequestInit = { headers: finalHeaders, method: "GET" };
+
   return request(finalUrl, requestInit, responseFormat);
 }
 
@@ -50,7 +56,25 @@ function post(
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
-  const requestInit: RequestInit = {headers: finalHeaders, method: "POST", body: JSON.stringify(body)};
+  const requestInit: RequestInit = {
+    headers: finalHeaders,
+    method: "POST",
+    body: JSON.stringify(body),
+  };
+  return request(finalUrl, requestInit, responseFormat);
+}
+
+function deleteRequest(
+  url: string,
+  params?: UrlParameter[],
+  headers?: [string, string][],
+  responseFormat: ResponseFormat = ResponseFormat.JSON
+): Promise<any> {
+  const urlParams: string = params ? extractUrlParams(params) : "";
+  const finalUrl = url + urlParams;
+  const finalHeaders = headers ? new Headers(headers) : new Headers();
+  const requestInit: RequestInit = { headers: finalHeaders, method: "DELETE" };
+
   return request(finalUrl, requestInit, responseFormat);
 }
 
@@ -105,6 +129,7 @@ function extractResponseBody(
 const fetchService: FetchService = {
   get: get,
   post: post,
+  deleteRequest: deleteRequest,
 };
 
 export default fetchService;

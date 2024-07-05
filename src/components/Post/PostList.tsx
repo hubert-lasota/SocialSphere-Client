@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Post } from "../types/post.types";
 import PostComponent from "./Post";
 import { v4 as uuidv4 } from "uuid";
-import ImageSlider from "./ImageSlider";
+import ImageSlider from "../ImageSlider/ImageSlider";
+import { Post } from "../../types/post.types";
+import styles from "./post.module.css"
 
 type PostListProps = {
   posts: Post[];
@@ -39,7 +40,7 @@ export default function PostList(props: PostListProps) {
       return <></>;
     }
     const newImages: Uint8Array[] = [];
-    let className: string = "post-content__img-container-img";
+    let className: string = styles["img-container__img"];
     let additionalClassName: string = className;
 
     for (let i = 0; i < images.length && i < 4; i++) {
@@ -48,23 +49,22 @@ export default function PostList(props: PostListProps) {
 
     switch (newImages.length) {
       case 1:
-        className += " post-content__img-container-img-one";
+        className += ` ${styles["img-container__img-one"]}`;
         break;
       case 2:
-        className += " post-content__img-container-img-two";
+        className += ` ${styles["img-container__img-two"]}`
         break;
       case 3:
-        className += " post-content__img-container-img-three-first-row";
-        additionalClassName +=
-          " post-content__img-container-img-three-second-row";
+        className += ` ${styles["img-container__img-three-first-row"]}`
+        additionalClassName += ` ${styles["img-container__img-three-second-row"]}`
         break;
       case 4:
-        className += " post-content__img-container-img-four";
+        className += " img-container__img-four";
         break;
     }
 
     return (
-      <div className="post-content__img-container">
+      <div className={styles["content__img-container"]}>
         {newImages.map((img, index) => {
           const uniqueImgKey = uuidv4();
           const src = `data:image/png;base64,${img}`;
@@ -75,8 +75,8 @@ export default function PostList(props: PostListProps) {
 
           if (index === 3 && images.length > 4) {
             return (
-              <div className="post-content_img-container__more">
-                <span className="post-content_img-container__more-text">
+              <div className={styles["img-container__more"]}>
+                <span className={styles["img-container__more__text"]}>
                   +{images.length - (index + 1)} more photos...
                 </span>
               </div>
@@ -139,6 +139,7 @@ export default function PostList(props: PostListProps) {
       content={post.content}
       likeCount={post.likeCount}
       commentCount={post.commentCount}
+      isLiked={post.isLiked}
     >
       {createImageComponent(post.images)}
     </PostComponent>

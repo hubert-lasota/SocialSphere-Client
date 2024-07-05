@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import HomeNavbarRightSide from "./HomeNavbarRightSide";
 import HomeSearchBar from "./HomeSearchBar";
+import styles from "./home.module.css";
 
 export default function HomeNavbar() {
   return (
-    <nav className="home__nav home__nav--bg-white home__nav--brd-btm-grey">
-      <div className="home__nav-left">
+    <nav className={`${styles["home__nav"]} ${styles["home__nav--bg-white"]} ${styles["home__nav--brd-btm-grey"]}`}>
+      <div className={styles["nav__left-side"]}>
         <Link to="/home">
           <FontAwesomeIcon icon={faS} size="3x" />
         </Link>

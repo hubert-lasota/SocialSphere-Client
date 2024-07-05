@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./submit-button.module.css";
 
 type SubmitButtonProps = {
   text?: string;
@@ -9,7 +10,7 @@ export default function SubmitButton(props: SubmitButtonProps) {
 
   return (
     <button
-      className="sign-in__btn sign-in__btn--fslg sign-in__btn--fwhite sign-in__btn--bgcolor-navy"
+      className={`${styles["submit-btn"]} ${styles["submit-btn--fslg"]} ${styles["submit-btn--fwhite"]} ${styles["submit-btn--bgcolor-navy"]}`}
       type="submit"
     >
       {text}

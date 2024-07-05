@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import "../../styles/login.css";
 import authService from "../../services/authService";
 import { LoginResponse } from "../../types/auth.types";
+import styles from "./login.module.css";
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -32,13 +32,13 @@ export default function Login() {
   }
 
   return (
-    <div className="login">
-      <div className="login__sign-up">
-        <div className="sign-up__header sign-up__header--fwhite sign-up__header--fslarge">
+    <div className={styles["login"]}>
+      <div className={styles["login__sign-up"]}>
+        <div className={`${styles["sign-up__header"]} ${styles["sign-up__header--fwhite"]} ${styles["sign-up__header--fslarge"]}`}>
           <p>Register with username and password</p>
           <p>to be able to use Social Sphere</p>
         </div>
-        <button className="sign-up__btn sign-up__btn--white sign-up__btn--fsmd">
+        <button className={`${styles["sign-up__btn"]} ${styles["sign-up__btn--white"]} ${styles["sign-up__btn--fsmd"]}`}>
           SIGN UP
         </button>
       </div>

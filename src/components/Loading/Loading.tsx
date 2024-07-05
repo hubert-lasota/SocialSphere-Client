@@ -1,3 +1,5 @@
+import "./loading.css"
+
 type LoadingProps = {
   className: string;
 };
