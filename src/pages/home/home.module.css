@@ -3,7 +3,7 @@
   width: 100%;
 
   display: grid;
-  grid-template-rows: 90px 1fr;
+  grid-template-rows: 65px 1fr;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
     "nav nav nav"
@@ -19,7 +19,7 @@
 .home__nav {
   position: fixed;
   width: 100%;
-  height: 90px;
+  height: 65px;
 
   padding-top: 1rem;
   display: flex;
@@ -45,13 +45,13 @@
 /*     RIGHT SIDE OF NAVBAR     */
 
 .nav__right-side {
-  padding-bottom: 1.2rem;
   padding-right: 3rem;
+  padding-bottom: 10px;
 }
 
 .nav__right-side__img {
   border-radius: 50%;
-  width: 4rem;
+  width: 2.5rem;
   height: auto;
 }
 
@@ -64,13 +64,13 @@
 .home__search-bar {
   width: 22%;
   height: 100%;
-  padding-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
   position: relative;
 }
 
 .search-bar__icon {
   position: absolute;
-  top: 19px;
+  top: 8px;
   left: 10px;
 }
 
@@ -163,15 +163,15 @@
   position: fixed;
   top: 0;
   left: 0;
-  margin-top: 90px;
+  margin-top: 65px;
   width: 16.5%;
-  padding-left: 1rem;
+  padding-left: 1.8rem;
 }
 
 .left-aside__user-line {
   display: flex;
   margin-top: 5rem;
-  padding: 1rem 0.5rem;
+  padding: 0.8rem 0.5rem;
   border-bottom: 1px solid #79797986;
 }
 
@@ -185,7 +185,7 @@
 .left-aside__user-line__profile-picture {
   display: inline;
   border-radius: 50%;
-  width: 15%;
+  width: 14%;
   height: auto;
 }
 
@@ -199,7 +199,7 @@
 }
 
 .left-aside__user-line__name__first-name--fsmd {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -207,13 +207,13 @@
 }
 
 .left-aside__user-line__name__last-name--fsmd {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
 .left-aside__find-friends {
   margin-top: 1rem;
-  padding: 1rem 0.5rem;
+  padding: 0.8rem 0.5rem;
   border-bottom: 1px solid #79797986;
   display: flex;
 }
@@ -231,7 +231,7 @@
 }
 
 .left-aside__find-friends__text--fsmd {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -243,13 +243,13 @@
   position: fixed;
   top: 0;
   right: 0;
-  margin-top: 90px;
+  margin: 65px 2rem 0 0;
   width: 16.5%;
 }
 
 .right-aside__friends {
   margin-top: 6rem;
-  padding-right: 1.7rem;
+  padding-right: 1.9rem;
 }
 
 .friends__header {
@@ -258,7 +258,7 @@
 }
 
 .friends__header--fslg {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
@@ -288,12 +288,12 @@
 }
 
 .friends__line__name__first-name--fsmd {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
 .friends__line__name__last-name--fsmd {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
@@ -301,7 +301,7 @@
 
 .home__main {
   grid-area: mn;
-  padding: 4rem 0;
+  padding: 3.5rem 0;
 
   display: flex;
   flex-direction: column;

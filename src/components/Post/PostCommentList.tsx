@@ -1,0 +1,88 @@
+import React, { useEffect, useState } from "react";
+import { PostComment, PostCommentResponse } from "../../types/post.types";
+import postService from "../../services/postService";
+import styles from "./post.module.css";
+import SubmitButton from "../button/SubmitButton";
+import PostCommentComponent from "./PostComment";
+
+type PostCommentListProps = {
+  postId: number;
+};
+
+export default function PostCommentList(props: PostCommentListProps) {
+  const { postId } = props;
+  const [postComments, setPostComments] = useState<PostComment[]>([]);
+  const [textareaValue, setTextareaValue] = useState<string>("");
+  const [isLast, setIsLast] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(0);
+
+  async function handleFetchPostComments() {
+    const postCommentPage = await postService.findPostCommentPage(postId.toString(), "0", "5");
+    if (postCommentPage && postCommentPage?.content) {
+      const comments = postCommentPage.content;
+      setPostComments(comments);
+      setIsLast(postCommentPage.last);
+    }
+  }
+
+  async function handleShowMoreComments() {
+    if (isLast) return;
+
+    const nextPage = pageNumber + 1;
+    setPageNumber(nextPage);
+
+    const postCommentPage = await postService.findPostCommentPage(postId.toString(), nextPage.toString(), "5");
+    if (postCommentPage && postCommentPage?.content) {
+      const comments = postCommentPage.content;
+      setPostComments(comments);
+      setIsLast(postCommentPage.last);
+    } else {
+      setIsLast(true);
+    }
+  }
+
+  async function handleAddComment(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const response: PostCommentResponse = await postService.createPostComment(postId.toString(), textareaValue);
+    if (response && response.success) {
+      const comments: PostComment[] = [response.comment, ...postComments];
+      setPostComments(comments);
+    }
+    setTextareaValue("");
+  }
+
+  useEffect(() => {
+    handleFetchPostComments();
+  }, []);
+
+  return (
+    <div className={styles["post__comments"]}>
+      <form onSubmit={(e) => handleAddComment(e)} className={styles["comments__create-comment"]}>
+        <textarea
+          placeholder="Write comment!"
+          className={styles["create-comment__input-field"]}
+          value={textareaValue}
+          onChange={(e) => setTextareaValue(e.target.value)}
+        />
+        <SubmitButton text="Comment" style={{ flexBasis: "25%", marginTop: 0, padding: "0.8rem", fontSize: "1.1rem" }} />
+      </form>
+      {postComments && postComments.length > 0 ? (
+        postComments.map((postComment) => <PostCommentComponent key={postComment.id} postComment={postComment} />)
+      ) : (
+        <></>
+      )}
+
+      {isLast ? (
+        <></>
+      ) : (
+        <button
+          className={`${styles["comments__show-more-btn"]} ${styles["comments__show-more-btn--bgcolor-navy"]} ${styles["comments__show-more-btn--fcolor-white"]}`}
+          onClick={() => handleShowMoreComments()}
+        >
+          Show more comments
+        </button>
+      )}
+    </div>
+  );
+}

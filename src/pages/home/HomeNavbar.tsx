@@ -10,7 +10,7 @@ export default function HomeNavbar() {
     <nav className={`${styles["home__nav"]} ${styles["home__nav--bg-white"]} ${styles["home__nav--brd-btm-grey"]}`}>
       <div className={styles["nav__left-side"]}>
         <Link to="/home">
-          <FontAwesomeIcon icon={faS} size="3x" />
+          <FontAwesomeIcon icon={faS} size="2x" />
         </Link>
       </div>
       <HomeSearchBar /> 

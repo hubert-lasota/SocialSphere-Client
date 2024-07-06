@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 * {
   padding: 0;
@@ -16,7 +16,8 @@ img {
   display: block;
 }
 
-input, button {
+input,
+button {
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   border: none;
@@ -29,4 +30,16 @@ input {
 
 button:hover {
   cursor: pointer;
+}
+
+textarea {
+  border: none;
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+
+  resize: none;
 }

@@ -4,6 +4,7 @@ export interface PostResponse {
   post: Post;
   code: string;
   message: string;
+  success: boolean
 };
 
 export interface PostPage {
@@ -21,6 +22,26 @@ export interface Post {
   commentCount: number;
   isLiked: boolean
 };
+
+export interface PostCommentResponse {
+  comment: PostComment
+  code: string
+  message: string
+  success: boolean
+}
+
+export interface PostCommentPage {
+  content: PostComment[];
+  last: boolean
+}
+
+export interface PostComment {
+  id: number;
+  postId: number;
+  authorId: number;
+  authorProfile: UserProfile;
+  content: string
+}
 
 export interface PostLikeResponse {
   postId: number,

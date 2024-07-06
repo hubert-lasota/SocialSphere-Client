@@ -60,7 +60,7 @@ export default function HomeLeftAside() {
         </div>
       </div>
       <div className={styles["left-aside__find-friends"]} onClick={() => handleGoOnFindFriends()}>
-        <FontAwesomeIcon icon={faPeopleLine} size="3x"/>
+        <FontAwesomeIcon icon={faPeopleLine} size="2x"/>
         <span className={`${styles["left-aside__find-friends__text"]} ${styles["left-aside__find-friends__text--fsmd"]}`}>
           FIND FRIENDS
         </span>
