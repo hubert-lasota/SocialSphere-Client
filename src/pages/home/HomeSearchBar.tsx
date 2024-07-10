@@ -1,19 +1,18 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
-import { SearchUsers } from "../../types/user.types";
-import userService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import userService from "../../services/userService";
+import { RelationshipStatus, SearchUsers } from "../../types/user.types";
 import styles from "./home.module.css";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
   const [inputStringOnFocus, setInputStringOnFocus] = useState("");
   const [searchedUsers, setSearchedUsers] = useState<SearchUsers[]>([
-    { userId: -1, firstName: "", lastName: "", profilePicture: null },
+    { userId: -1, firstName: "", lastName: "", profilePicture: null, relationshipStatus: "YOU" },
   ]);
-  const [isSearchUsersListVisible, setIsSearchUsersListVisible] =
-    useState(false);
+  const [isSearchUsersListVisible, setIsSearchUsersListVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -34,16 +33,10 @@ export default function HomeSearchBar() {
     if (inputString && inputString.length > 0) {
       handleSearchFriends(inputString);
       setIsSearchUsersListVisible(true);
-      inputRef.current?.classList.add(
-        styles["search-bar__input--no-bdr-btm"],
-        styles["search-bar__input--bg-white"]
-      );
+      inputRef.current?.classList.add(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
     } else {
       setIsSearchUsersListVisible(false);
-      inputRef.current?.classList.remove(
-        styles["search-bar__input--no-bdr-btm"],
-        styles["search-bar__input--bg-white"]
-      );
+      inputRef.current?.classList.remove(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
     }
   }, [inputString]);
 
@@ -57,10 +50,7 @@ export default function HomeSearchBar() {
       setIsSearchUsersListVisible(false);
       setInputString("");
       setSearchedUsers([]);
-      inputRef.current?.classList.remove(
-        styles["search-bar__input--no-bdr-btm"],
-        styles["search-bar__input--bg-white"]
-      );
+      inputRef.current?.classList.remove(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
     }
   }
 
@@ -76,8 +66,12 @@ export default function HomeSearchBar() {
     setInputString(inputStringOnFocus);
   }
 
-  function handleGoOnUserProfile(userId: number) {
-    navigate(`/user/${userId}`);
+  function handleGoOnUserProfile(userId: number, relationshipStatus: RelationshipStatus) {
+    if (relationshipStatus === "YOU") {
+      navigate("/me");
+    } else {
+      navigate(`/user/${userId}`);
+    }
   }
 
   return (
@@ -101,10 +95,7 @@ export default function HomeSearchBar() {
       />
 
       {searchedUsers && isSearchUsersListVisible ? (
-        <div
-          ref={userListRef}
-          className={`${styles["search-bar__user-list"]} ${styles["search-bar__user-list--bg-white"]}`}
-        >
+        <div ref={userListRef} className={`${styles["search-bar__user-list"]} ${styles["search-bar__user-list--bg-white"]}`}>
           {searchedUsers.map((u) => {
             let profilePictureUrl: string;
             if (u.profilePicture) {
@@ -116,12 +107,19 @@ export default function HomeSearchBar() {
               <div
                 key={u.userId}
                 className={styles["user-list__line"]}
-                onClick={() => handleGoOnUserProfile(u.userId)}
+                onClick={() => handleGoOnUserProfile(u.userId, u.relationshipStatus)}
               >
                 <img src={profilePictureUrl} className={styles["user-list__line__img"]} />
-                <div className={styles["user-list__line__name"]}>
-                  <p className={styles["line__name__text"]}>{u.firstName}</p>
-                  <p className={styles["line__name__text"]}>{u.lastName}</p>
+                <div className={styles["user-list__line__details"]}>
+                  <div className={styles["line__details__name"]}>
+                    <p className={styles["details__name__text"]}>{u.firstName}</p>
+                    <p className={styles["details__name__text"]}>{u.lastName}</p>
+                  </div>
+                  <div
+                    className={`${styles["line__details__relationship-status"]} ${styles["line__details__relationship-status--fssm"]}`}
+                  >
+                    {u.relationshipStatus}
+                  </div>
                 </div>
               </div>
             );

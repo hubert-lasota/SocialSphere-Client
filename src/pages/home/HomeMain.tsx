@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/Loading/Loading";
+import PostList from "../../components/Post/PostList";
 import postService from "../../services/postService";
 import { Post, PostPage } from "../../types/post.types";
-import PostList from "../../components/Post/PostList";
 import styles from "./home.module.css";
 
 export default function HomeMain() {
@@ -13,8 +13,8 @@ export default function HomeMain() {
 
   async function handleFetchPost(pageNumber: number) {
     setLoading(true);
-    const postPage: PostPage = await postService.findPostPage(`${pageNumber}`, "5");
-    if(!postPage) {
+    const postPage: PostPage = await postService.findPostPageForCurrentUser(`${pageNumber}`, "5");
+    if (!postPage) {
       setLoading(false);
       return;
     }
@@ -47,10 +47,7 @@ export default function HomeMain() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 5
-      ) {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 5) {
         setLoading(true);
         handleEndOfPage();
       }
@@ -65,7 +62,7 @@ export default function HomeMain() {
 
   return (
     <div className={styles["home__main"]}>
-      <PostList posts={posts}/>
+      <PostList posts={posts} />
       {loading ? <Loading className="post-loader" /> : <></>}
     </div>
   );

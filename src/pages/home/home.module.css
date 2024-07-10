@@ -42,7 +42,6 @@
   padding-left: 3rem;
 }
 
-
 /*     RIGHT SIDE OF NAVBAR     */
 
 .nav__right-side {
@@ -52,7 +51,7 @@
 
 .nav__right-side__img {
   border-radius: 50%;
-  width: 2.5rem;
+  width: 2.7rem;
   height: auto;
 }
 
@@ -92,7 +91,7 @@
 }
 
 .search-bar__input--fsmd {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
@@ -145,20 +144,27 @@
   border-radius: 50%;
 }
 
+.user-list__line__details {
+  padding-left: 1.3rem;
+}
 
-.user-list__line__name {
+.line__details__name {
   display: flex;
   gap: 5px;
 }
 
-.user-list__line__name p:first-child {
-  padding-left: 1.3rem;
-}
-
-.line__name__text {
+.details__name__text {
   display: inline-block;
   font-size: 1.1rem;
   font-weight: 450;
+}
+
+.line__details__relationship-status {
+  padding-top: 0.4rem;
+}
+
+.line__details__relationship-status--fssm {
+  font-size: 0.7rem;
 }
 
 /*    LEFT ASIDE  */
@@ -167,15 +173,24 @@
   position: fixed;
   top: 0;
   left: 0;
-  margin-top: 65px;
+  margin-top: 10rem;
+  margin-left: 3rem;
+  min-width: 300px;
+  min-height: 450px;
   width: 16.5%;
-  padding-left: 1.8rem;
+  padding: 1rem;
+  border-radius: 10px;
+  user-select: none;
+}
+
+.home__left-aside--bgcolor-white {
+  background-color: #f7f7f7;
+  box-shadow: 0px 1px 13px 1px rgba(208, 208, 208, 1);
 }
 
 .left-aside__user-line {
   display: flex;
-  margin-top: 5rem;
-  padding: 0.8rem 0.5rem;
+  padding: 1rem;
   border-bottom: 1px solid #79797986;
 }
 
@@ -189,7 +204,7 @@
 .left-aside__user-line__profile-picture {
   display: inline;
   border-radius: 50%;
-  width: 14%;
+  width: 16%;
   height: auto;
 }
 
@@ -217,7 +232,7 @@
 
 .left-aside__find-friends {
   margin-top: 1rem;
-  padding: 0.8rem 0.5rem;
+  padding: 1rem;
   border-bottom: 1px solid #79797986;
   display: flex;
 }
@@ -239,8 +254,6 @@
   font-weight: 500;
 }
 
-
-
 /*    RIGHT ASIDE  */
 
 .home__right-aside {
@@ -249,6 +262,12 @@
   right: 0;
   margin: 65px 2rem 0 0;
   width: 16.5%;
+  user-select: none;
+}
+
+.home__right-aside--bgcolor-white {
+  background-color: #f7f7f7;
+  box-shadow: 0px 1px 13px 1px rgba(208, 208, 208, 1);
 }
 
 .right-aside__friends {
@@ -277,7 +296,7 @@
 }
 
 .friends__line__profile-picture {
-  width: 15%;
+  width: 16%;
   height: auto;
   border-radius: 50%;
 }
@@ -311,4 +330,3 @@
   flex-direction: column;
   align-items: center;
 }
-

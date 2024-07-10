@@ -43,7 +43,7 @@ export default function HomeLeftAside() {
   }
 
   return (
-    <aside className={styles["home__left-aside"]}>
+    <aside className={`${styles["home__left-aside"]} ${styles["home__left-aside--bgcolor-white"]}`}>
       <div className={styles["left-aside__user-line"]} onClick={() => handleGoOnMyProfile()}>
         <img
           src={profilePictureUrl}

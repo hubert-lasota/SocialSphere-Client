@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { PostComment, PostCommentResponse } from "../../types/post.types";
 import postService from "../../services/postService";
-import styles from "./post.module.css";
+import { PostComment, PostCommentResponse } from "../../types/post.types";
 import SubmitButton from "../button/SubmitButton";
+import styles from "./post.module.css";
 import PostCommentComponent from "./PostComment";
 
 type PostCommentListProps = {
   postId: number;
+  handleIncrementCommentCounter: () => void;
 };
 
 export default function PostCommentList(props: PostCommentListProps) {
-  const { postId } = props;
+  const { postId, handleIncrementCommentCounter } = props;
   const [postComments, setPostComments] = useState<PostComment[]>([]);
   const [textareaValue, setTextareaValue] = useState<string>("");
   const [isLast, setIsLast] = useState<boolean>(false);
@@ -32,8 +33,8 @@ export default function PostCommentList(props: PostCommentListProps) {
     setPageNumber(nextPage);
 
     const postCommentPage = await postService.findPostCommentPage(postId.toString(), nextPage.toString(), "5");
-    if (postCommentPage && postCommentPage?.content) {
-      const comments = postCommentPage.content;
+    if (postCommentPage && !postCommentPage.last) {
+      const comments = [...postComments, ...postCommentPage.content];
       setPostComments(comments);
       setIsLast(postCommentPage.last);
     } else {
@@ -46,6 +47,7 @@ export default function PostCommentList(props: PostCommentListProps) {
 
     const response: PostCommentResponse = await postService.createPostComment(postId.toString(), textareaValue);
     if (response && response.success) {
+      handleIncrementCommentCounter();
       const comments: PostComment[] = [response.comment, ...postComments];
       setPostComments(comments);
     }
@@ -73,15 +75,15 @@ export default function PostCommentList(props: PostCommentListProps) {
         <></>
       )}
 
-      {isLast ? (
-        <></>
-      ) : (
+      {!isLast && postComments.length > 0 ? (
         <button
           className={`${styles["comments__show-more-btn"]} ${styles["comments__show-more-btn--bgcolor-navy"]} ${styles["comments__show-more-btn--fcolor-white"]}`}
           onClick={() => handleShowMoreComments()}
         >
           Show more comments
         </button>
+      ) : (
+        <></>
       )}
     </div>
   );

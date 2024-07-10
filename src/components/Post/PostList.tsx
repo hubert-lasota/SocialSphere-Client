@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Post } from "../../types/post.types";
 import styles from "./post.module.css"
+import { createPortal } from "react-dom";
 
 type PostListProps = {
   posts: Post[];
@@ -115,15 +116,13 @@ export default function PostList(props: PostListProps) {
     }
     return profilePictureSrc;
   }
-
+  
   if (openImageSlider) {
-    return (
-      <ImageSlider
-        imageUrls={imageSliderUrls}
-        imageInitialIndex={imageSliderInitialIndex}
-        handleExit={handleCloseImageSlider}
-      />
-    );
+    return createPortal(<ImageSlider
+      imageUrls={imageSliderUrls}
+      imageInitialIndex={imageSliderInitialIndex}
+      handleExit={handleCloseImageSlider}
+    />, document.getElementById("portal") as HTMLElement)
   }
 
   return posts.map((post) => (

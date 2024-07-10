@@ -24,7 +24,7 @@ export default function HomeRightAside() {
   }
 
   return (
-    <aside className={styles["home__right-aside"]}>
+    <aside className={`${styles["home__right-aside"]} ${styles["home__right-aside--bgcolor-white"]}`}>
       <div className={styles["right-aside__friends"]}>
         <div className={`${styles["friends__header"]} ${styles["friends__header--fslg"]}`}>
           Friends

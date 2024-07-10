@@ -21,6 +21,7 @@
   align-items: center;
 
   border-bottom: 1px solid #dddddd86;
+  user-select: none;
 }
 
 .header__profile-picture {
@@ -120,6 +121,7 @@
   border-top: 1px solid #dddddd86;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 
 .footer__like {
@@ -200,7 +202,7 @@
 
 .single-comment__header__profile-picture {
   display: inline;
-  width: 10%;
+  width: 8%;
   height: auto;
   border-radius: 50%;
 }

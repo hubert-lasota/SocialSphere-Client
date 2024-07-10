@@ -1,4 +1,4 @@
-import { Post, PostCommentPage, PostCommentResponse, PostLikeResponse, PostPage } from "../types/post.types";
+import { PostCommentPage, PostCommentResponse, PostLikeResponse, PostPage } from "../types/post.types";
 import getFromLocalStorage from "../utils/getFromLocalStorage";
 import getJwtHeaderFromLocalStorage from "../utils/getJwtHeaderFromLocalStorage";
 import fetchService, { UrlParameter } from "./fetchService";
@@ -6,7 +6,8 @@ import fetchService, { UrlParameter } from "./fetchService";
 interface PostService {
   addLikeToPost: (postId: string) => Promise<PostLikeResponse>;
   createPostComment: (postId: string, content: string) => Promise<PostCommentResponse>;
-  findPostPage: (pageNumber: string, pageSize: string) => Promise<PostPage>;
+  findUserPostPage: (userId: string, pageNumber: string, pageSize: string) => Promise<PostPage>;
+  findPostPageForCurrentUser: (pageNumber: string, pageSize: string) => Promise<PostPage>;
   findPostCommentPage: (postId: string, pageNumber: string, pageSize: string) => Promise<PostCommentPage>;
   removeLikeFromPost: (postId: string) => Promise<PostLikeResponse>;
 }
@@ -34,16 +35,30 @@ function createPostComment(postId: string, content: string): Promise<PostComment
   return fetchService.post(finalUrl, body, undefined, [jwtHeader, applicationJsonHeader]) as Promise<PostCommentResponse>;
 }
 
-function findPostPage(pageNumber: string, pageSize: string): Promise<PostPage> {
+function findUserPostPage(userId: string, pageNumber: string, pageSize: string): Promise<PostPage> {
+  const currentUserId = getFromLocalStorage("user_id");
   const jwtHeader = getJwtHeaderFromLocalStorage();
+  const urlParams: UrlParameter[] = [
+    { key: "currentUserId", value: currentUserId },
+    { key: "userToCheckId", value: userId },
+    { key: "page", value: pageNumber },
+    { key: "size", value: pageSize },
+  ];
+
+  return fetchService.get(url, urlParams, [jwtHeader]) as Promise<PostPage>;
+}
+
+function findPostPageForCurrentUser(pageNumber: string, pageSize: string): Promise<PostPage> {
+  const finalUrl = url + "/recent";
   const userId = getFromLocalStorage("user_id");
+  const jwtHeader = getJwtHeaderFromLocalStorage();
   const urlParams: UrlParameter[] = [
     { key: "userId", value: userId },
     { key: "page", value: pageNumber },
     { key: "size", value: pageSize },
   ];
 
-  return fetchService.get(url, urlParams, [jwtHeader]) as Promise<PostPage>;
+  return fetchService.get(finalUrl, urlParams, [jwtHeader]) as Promise<PostPage>;
 }
 
 function findPostCommentPage(postId: string, pageNumber: string, pageSize: string): Promise<PostCommentPage> {
@@ -71,7 +86,8 @@ function removeLikeFromPost(postId: string): Promise<PostLikeResponse> {
 }
 
 const postService: PostService = {
-  findPostPage: findPostPage,
+  findUserPostPage: findUserPostPage,
+  findPostPageForCurrentUser: findPostPageForCurrentUser,
   findPostCommentPage: findPostCommentPage,
   createPostComment: createPostComment,
   addLikeToPost: addLikeToPost,
