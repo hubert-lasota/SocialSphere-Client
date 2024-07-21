@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import userService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
-import styles from "./home.module.css";
+import css from "./home.module.css";
 
 export default function HomeNavbarRightSide() {
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
@@ -25,8 +25,8 @@ export default function HomeNavbarRightSide() {
   }
 
   return (
-    <div className={styles["nav__right-side"]}>
-      <img src={profilePictureUrl} onClick={() => handleGoOnMyPage()} className={styles["nav__right-side__img"]}/>
+    <div className={css["nav__right-side"]}>
+      <img src={profilePictureUrl} onClick={() => handleGoOnMyPage()} className={css["nav__right-side__img"]}/>
     </div>
   );
 }

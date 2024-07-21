@@ -3,7 +3,7 @@ import PostComponent from "./Post";
 import { v4 as uuidv4 } from "uuid";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Post } from "../../types/post.types";
-import styles from "./post.module.css"
+import css from "./post.module.css"
 import { createPortal } from "react-dom";
 
 type PostListProps = {
@@ -41,7 +41,7 @@ export default function PostList(props: PostListProps) {
       return <></>;
     }
     const newImages: Uint8Array[] = [];
-    let className: string = styles["img-container__img"];
+    let className: string = css["img-container__img"];
     let additionalClassName: string = className;
 
     for (let i = 0; i < images.length && i < 4; i++) {
@@ -50,14 +50,14 @@ export default function PostList(props: PostListProps) {
 
     switch (newImages.length) {
       case 1:
-        className += ` ${styles["img-container__img-one"]}`;
+        className += ` ${css["img-container__img-one"]}`;
         break;
       case 2:
-        className += ` ${styles["img-container__img-two"]}`
+        className += ` ${css["img-container__img-two"]}`
         break;
       case 3:
-        className += ` ${styles["img-container__img-three-first-row"]}`
-        additionalClassName += ` ${styles["img-container__img-three-second-row"]}`
+        className += ` ${css["img-container__img-three-first-row"]}`
+        additionalClassName += ` ${css["img-container__img-three-second-row"]}`
         break;
       case 4:
         className += " img-container__img-four";
@@ -65,7 +65,7 @@ export default function PostList(props: PostListProps) {
     }
 
     return (
-      <div className={styles["content__img-container"]}>
+      <div className={css["content__img-container"]}>
         {newImages.map((img, index) => {
           const uniqueImgKey = uuidv4();
           const src = `data:image/png;base64,${img}`;
@@ -76,8 +76,8 @@ export default function PostList(props: PostListProps) {
 
           if (index === 3 && images.length > 4) {
             return (
-              <div className={styles["img-container__more"]}>
-                <span className={styles["img-container__more__text"]}>
+              <div className={css["img-container__more"]}>
+                <span className={css["img-container__more__text"]}>
                   +{images.length - (index + 1)} more photos...
                 </span>
               </div>
@@ -131,7 +131,7 @@ export default function PostList(props: PostListProps) {
       id={post.id}
       userId={post.userId}
       profilePictureSrc={createProfilePicutreSrc(
-        post.userProfile.profilePicture
+        post.userProfile.profilePicture as Uint8Array
       )}
       firstName={post.userProfile.firstName}
       lastName={post.userProfile.lastName}

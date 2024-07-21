@@ -1,4 +1,4 @@
-import styles from "./profile.module.css";
+import css from "./profile.module.css";
 
 type ProfileHeaderProps = {
   firstName: string;
@@ -11,19 +11,19 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
   const { firstName, lastName, profilePictureUrl, children } = props;
   return (
     <div
-      className={`${styles["profile__header"]} ${styles["profile__header--bgcolor-white"]} ${styles["profile__header--brd-btm-grey"]}`}
+      className={`${css["profile__header"]}`}
     >
-        <div className={`${styles["header__left-side"]}`}>
-            <img src={profilePictureUrl} alt="profile" className={`${styles["header__left-side__profile-picture"]}`}/>
-            <div className={`${styles["header__left-side__name"]} ${styles["header__left-side__name--fslg"]} ${styles["header__left-side__name--fcolor-grey"]}`}>
-                <span>{firstName}</span>
-                <span>{lastName}</span>
-            </div>
+      <div className={`${css["header__left-side"]}`}>
+        <img src={profilePictureUrl} alt="profile" className={`${css["header__left-side__profile-picture"]}`} />
+        <div
+          className={`${css["header__left-side__name"]}`}
+        >
+          <span>{firstName}</span>
+          <span>{lastName}</span>
         </div>
+      </div>
 
-        <div className={`${styles["header__right-side"]}`}>
-            {children}
-        </div>
+      <div className={`${css["header__right-side"]}`}>{children}</div>
     </div>
   );
 }

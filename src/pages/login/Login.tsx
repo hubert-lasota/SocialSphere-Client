@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import authService from "../../services/authService";
 import { LoginResponse } from "../../types/auth.types";
-import styles from "./login.module.css";
+import css from "./login.module.css";
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -32,13 +32,13 @@ export default function Login() {
   }
 
   return (
-    <div className={styles["login"]}>
-      <div className={styles["login__sign-up"]}>
-        <div className={`${styles["sign-up__header"]} ${styles["sign-up__header--fwhite"]} ${styles["sign-up__header--fslarge"]}`}>
+    <div className={css["login"]}>
+      <div className={css["login__sign-up"]}>
+        <div className={`${css["sign-up__header"]}`}>
           <p>Register with username and password</p>
           <p>to be able to use Social Sphere</p>
         </div>
-        <button className={`${styles["sign-up__btn"]} ${styles["sign-up__btn--white"]} ${styles["sign-up__btn--fsmd"]}`}>
+        <button className={`${css["sign-up__btn"]}`}>
           SIGN UP
         </button>
       </div>

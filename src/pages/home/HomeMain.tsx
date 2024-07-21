@@ -3,7 +3,7 @@ import Loading from "../../components/Loading/Loading";
 import PostList from "../../components/Post/PostList";
 import postService from "../../services/postService";
 import { Post, PostPage } from "../../types/post.types";
-import styles from "./home.module.css";
+import css from "./home.module.css";
 
 export default function HomeMain() {
   const [postPage, setPostPage] = useState<PostPage>();
@@ -61,9 +61,9 @@ export default function HomeMain() {
   }, [postPage]);
 
   return (
-    <div className={styles["home__main"]}>
+    <div className={css["home__main"]}>
       <PostList posts={posts} />
-      {loading ? <Loading className="post-loader" /> : <></>}
+      {loading ? <Loading className="small-loader" /> : <></>}
     </div>
   );
 }

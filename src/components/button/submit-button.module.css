@@ -1,26 +1,18 @@
 .submit-btn {
   width: 60%;
-  height: 7%;
+  min-height: 7%;
   margin-top: 1rem;
+
   border-radius: 15px;
+  background-color: #150864;
+  border: 1px solid #150864;
+  opacity: 0.92;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
 }
 
 .submit-btn:hover {
   box-shadow: 0px 0px 20px -4px rgba(21, 8, 100, 1);
   opacity: 0.9;
-}
-
-.submit-btn--fslg {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.submit-btn--fwhite {
-  color: #fff;
-}
-
-.submit-btn--bgcolor-navy {
-  background-color: #150864;
-  border: 1px solid #150864;
-  opacity: 0.92;
 }

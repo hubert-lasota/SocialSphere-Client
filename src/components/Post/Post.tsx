@@ -3,9 +3,10 @@ import { faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import postService from "../../services/postService";
 import { PostLikeResponse } from "../../types/post.types";
-import styles from "./post.module.css";
+import css from "./post.module.css";
 import PostCommentList from "./PostCommentList";
 
 type PostProps = {
@@ -23,6 +24,7 @@ type PostProps = {
 
 export default function Post(props: PostProps) {
   const { id, userId, profilePictureSrc, firstName, lastName, content, likeCount, commentCount, isLiked, children } = props;
+  const [currentUserId] = useLocalStorage("user_id", "");
   const [isPostLiked, setIsPostLiked] = useState<boolean>(isLiked);
   const [likeCounter, setLikeCounter] = useState<number>(likeCount);
   const [commentCounter, setCommentCounter] = useState<number>(commentCount);
@@ -30,7 +32,11 @@ export default function Post(props: PostProps) {
   const navigate = useNavigate();
 
   function handleGoOnUserPage(userId: number) {
-    navigate(`/user/${userId}`);
+    if (currentUserId === userId) {
+      navigate("/me");
+    } else {
+      navigate(`/user/${userId}`);
+    }
   }
 
   async function handleAddLikeToPost(postId: number) {
@@ -65,59 +71,51 @@ export default function Post(props: PostProps) {
   }
 
   return (
-    <div key={id} className={`${styles["post"]} ${styles["post--bg-white"]}`}>
-      <div className={styles["post__header"]}>
+    <div key={id} className={`${css["post"]}`}>
+      <div className={css["post__header"]}>
         <img
           src={profilePictureSrc}
           alt="profile"
-          className={styles["header__profile-picture"]}
+          className={css["header__profile-picture"]}
           onClick={() => handleGoOnUserPage(userId)}
         />
-        <div className={styles["header__name"]}>
-          <span
-            className={`${styles["header__name__text"]} ${styles["header__name__text--fsmd"]} ${styles["header__name__text--grey"]}`}
-          >
-            {firstName}
-          </span>
-          <span
-            className={`${styles["header__name__text"]} ${styles["header__name__text--fsmd"]} ${styles["header__name__text--grey"]}`}
-          >
-            {lastName}
-          </span>
+        <div className={css["header__name"]}>
+          <span className={`${css["header__name__text"]}`}>{firstName}</span>
+          <span className={`${css["header__name__text"]}`}>{lastName}</span>
         </div>
       </div>
-      <div className={styles["post__content"]}>
-        <p className={`${styles["content__text"]} ${styles["content__text--fsmd"]}`}>{content}</p>
+      <div className={css["post__content"]}>
+        <p className={`${css["content__text"]}`}>{content}</p>
         {children}
       </div>
-      <div className={styles["post__footer"]}>
-        <div className={styles["footer__like"]}>
-          <div className={styles["like__icon"]}>
+      <div className={css["post__footer"]}>
+        <div className={css["footer__like"]}>
+          <div className={css["like__icon"]}>
             {isPostLiked ? (
               <FontAwesomeIcon
                 icon={faHeartFilled}
                 size="xl"
                 onClick={() => handleRemoveLikeFromPost(id)}
-                className={`${styles["like__filled-icon"]} ${styles["like__filled-icon--red"]}`}
+                className={`${css["like__filled-icon"]}`}
               />
             ) : (
               <FontAwesomeIcon
                 icon={faHeartEmpty}
                 size="xl"
                 onClick={() => handleAddLikeToPost(id)}
-                className={styles["like__empty-icon"]}
+                className={css["like__empty-icon"]}
               />
             )}
           </div>
-          <span className={styles["like__text"]}>
+          <span className={css["like__text"]}>
             {likeCounter > 1 ? likeCounter : ""} {likeCounter > 1 && likeCounter !== 0 ? "people like that post" : ""}
             {likeCounter === 0 ? "" : "one person likes that post"}
           </span>
         </div>
-        <div className={styles["footer__comment"]} onClick={() => handleOpenPostComments()}>
-          <div className={styles["footer__comment__box"]}>
+        <div className={css["footer__comment"]} onClick={() => handleOpenPostComments()}>
+          <div className={css["footer__comment__box"]}>
             <FontAwesomeIcon icon={faComments} size="xl" />
-            <span className={styles["footer__comment__box__text"]}>{commentCounter} comments</span>
+            <span className={css["footer__comment__box__text"]}>{commentCounter} comments</span>
           </div>
         </div>
       </div>

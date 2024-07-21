@@ -1,4 +1,4 @@
-import styles from "./profile.module.css";
+import css from "./profile.module.css";
 
 type ProfileHeaderButtonProps = {
   text?: string | null;
@@ -9,7 +9,7 @@ type ProfileHeaderButtonProps = {
 export default function ProfileHeaderButton(props: ProfileHeaderButtonProps) {
   const { text, style, handleClick } = props;
   return (
-    <button style={style} className={`${styles["header__right-side__btn"]} ${styles["header__right-side__btn--bgcolor-navy"]} ${styles["header__right-side__btn--fcolor-white"]}`} onClick={handleClick}>
+    <button style={style} className={`${css["header__right-side__btn"]}`} onClick={handleClick}>
       {text}
     </button>
   );

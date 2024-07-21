@@ -10,7 +10,7 @@ export interface SearchUsers {
   firstName: string;
   lastName: string;
   profilePicture: Uint8Array | null;
-  relationshipStatus: RelationshipStatus
+  relationshipStatus: RelationshipStatus;
 }
 
 export interface UserResponse {
@@ -30,26 +30,40 @@ export interface User {
 
 export type RelationshipStatus = "YOU" | "FRIEND" | "STRANGER";
 
+export interface UserProfileResponse {
+  userProfile: UserProfile;
+  code: string;
+  message: string;
+  success: boolean;
+}
+
 export interface UserProfile {
   firstName: string;
   lastName: string;
   city: string;
   country: string;
-  profilePicture: Uint8Array | null;
+  profilePicture: Uint8Array | File | null;
+}
+
+export interface UserProfileConfigResponse {
+  useProfileConfig: UserProfileConfig;
+  success: boolean;
+  code: string;
+  message: string;
 }
 
 export interface UserProfileConfig {
   profilePrivacyLevel: ProfilePrivacyLevel;
 }
 
-enum ProfilePrivacyLevel {
-  PRIVATE,
-  PUBLIC,
-  FRIENDS,
+export enum ProfilePrivacyLevel {
+  PRIVATE = "PRIVATE",
+  PUBLIC = "PUBLIC",
+  FRIENDS = "FRIENDS",
 }
 
 export interface Friend {
-  user: { id: number; username: string };
+  user: User;
   userProfile: UserProfile;
 }
 

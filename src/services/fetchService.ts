@@ -1,11 +1,13 @@
 interface FetchService {
-  get: (
+  get: (url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
+  post: (
     url: string,
+    body: any,
     params?: UrlParameter[],
     headers?: [string, string][],
     responseFormat?: ResponseFormat
   ) => Promise<any>;
-  post: (
+  put: (
     url: string,
     body: any,
     params?: UrlParameter[],
@@ -64,6 +66,22 @@ function post(
   return request(finalUrl, requestInit, responseFormat);
 }
 
+function put(url: string, body: any | FormData, params?: UrlParameter[], headers?: [string, string][], responseFormat: ResponseFormat = ResponseFormat.JSON) {
+  const urlParams: string = params ? extractUrlParams(params) : "";
+  const finalUrl = url + urlParams;
+  const finalHeaders = headers ? new Headers(headers) : new Headers();
+  let requestInitBody;
+  if(body instanceof FormData) {
+    requestInitBody = body
+  } else {
+    requestInitBody = JSON.stringify(body);
+  }
+
+  const requestInit: RequestInit = { headers: finalHeaders, method: "PUT", body: requestInitBody};
+
+  return request(finalUrl, requestInit, responseFormat);
+}
+
 function deleteRequest(
   url: string,
   params?: UrlParameter[],
@@ -78,19 +96,10 @@ function deleteRequest(
   return request(finalUrl, requestInit, responseFormat);
 }
 
-function request(
-  url: string,
-  requestInit: RequestInit,
-  responseFormat: ResponseFormat
-): Promise<any> {
+function request(url: string, requestInit: RequestInit, responseFormat: ResponseFormat): Promise<any> {
   return fetch(url, requestInit)
     .then((response) => extractResponseBody(response, responseFormat))
-    .catch((error) =>
-      console.error(
-        `Error occured with ${requestInit.method} and URL: ${url}`,
-        error
-      )
-    );
+    .catch((error) => console.error(`Error occured with ${requestInit.method} and URL: ${url}`, error));
 }
 
 function extractUrlParams(params: UrlParameter[]): string {
@@ -108,10 +117,7 @@ function extractUrlParams(params: UrlParameter[]): string {
   return urlParams;
 }
 
-function extractResponseBody(
-  response: Response,
-  responseFormat: ResponseFormat
-): any {
+function extractResponseBody(response: Response, responseFormat: ResponseFormat): any {
   switch (responseFormat) {
     case ResponseFormat.RESPONSE:
       return response;
@@ -129,6 +135,7 @@ function extractResponseBody(
 const fetchService: FetchService = {
   get: get,
   post: post,
+  put: put,
   deleteRequest: deleteRequest,
 };
 

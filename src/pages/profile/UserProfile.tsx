@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import userService from "../../services/userService";
-import { RelationshipStatus, UserResponse } from "../../types/user.types";
-import styles from "./profile.module.css";
+import { ProfilePrivacyLevel, RelationshipStatus, UserProfileConfig, UserResponse } from "../../types/user.types";
+import css from "./profile.module.css";
 import ProfileHeader from "./ProfileHeader";
 import ProfileHeaderButton from "./ProfileHeaderButton";
+import ProfileLeftAside from "./ProfileLeftAside";
 import ProfileMain from "./ProfileMain";
 
 type btnTextType = "Send Friend Request" | "Waiting for response" | "Remove from friends";
@@ -14,21 +15,26 @@ export default function UserProfile() {
   const [lastName, setLastName] = useState<string>("");
   const [profilePictureUrl, setProfilePictureUrl] = useState<string>("");
   const [relationshipStatus, setRelationshipStatus] = useState<RelationshipStatus | null>(null);
+  const [user, setUser] = useState<UserResponse>();
   const [btnText, setBtnText] = useState<btnTextType | null>(null);
+  const [isCurrentUserAbleToCheckProfile, setIsCurrentUserAbleToCheckProfile] = useState<boolean>(false);
   const [isShowPost, setIsShowPosts] = useState<boolean>(true);
+  const [isShowFriends, setIsShowFriends] = useState<boolean>(false);
   const [isMoreAbout, setIsMoreAbout] = useState<boolean>(false);
 
-
-  const urlParams = useParams();
+  const { id: urlParamId } = useParams();
   const navigate = useNavigate();
 
+
+
   async function handleFetchUser() {
-    if (!urlParams.id) {
+    if (!urlParamId) {
       console.warn("Cannot fetch user details because id is undefined");
       return;
     }
-    const response: UserResponse = await userService.findUser(urlParams.id);
+    const response: UserResponse = await userService.findUser(urlParamId);
     if (response && response?.success) {
+      setUser(response);
       const { user, userProfile } = response;
       setRelationshipStatus(user.relationshipStatus);
       setFirstName(userProfile.firstName);
@@ -37,6 +43,7 @@ export default function UserProfile() {
         ? `data:image/png;base64,${userProfile.profilePicture}`
         : "/src/assets/default-profile-picture.png";
       setProfilePictureUrl(profilePicUrl);
+      checkIfCurrentUserIsAbleToCheckProfile(user.relationshipStatus, response.userProfileConfig);
     }
   }
 
@@ -52,9 +59,20 @@ export default function UserProfile() {
     }
   }
 
+  function checkIfCurrentUserIsAbleToCheckProfile(relationshipStatus: RelationshipStatus, userProfileConfig: UserProfileConfig) {
+    const profilePrivacyLevel: ProfilePrivacyLevel = userProfileConfig.profilePrivacyLevel;
+    if (profilePrivacyLevel === "PUBLIC") {
+      setIsCurrentUserAbleToCheckProfile(true);
+    } else if (profilePrivacyLevel === "FRIENDS" && relationshipStatus === "FRIEND") {
+      setIsCurrentUserAbleToCheckProfile(true);
+    } else if (profilePrivacyLevel === "PRIVATE") {
+      setIsCurrentUserAbleToCheckProfile(false);
+    }
+  }
+
   useEffect(() => {
     handleFetchUser();
-  }, []);
+  }, [urlParamId]);
 
   useEffect(() => {
     chooseBtnText();
@@ -72,53 +90,48 @@ export default function UserProfile() {
   }
 
   async function handleClickBtn() {
-    if (!urlParams.id) {
+    if (!urlParamId) {
       console.warn("Cannot fetch user details because id is undefined");
       return;
     } else if (relationshipStatus === "YOU") {
       console.warn('Relationship is mistakenly set - "YOU"');
       return;
     } else if (relationshipStatus === "STRANGER") {
-      handleSendFriendRequest(urlParams.id);
+      handleSendFriendRequest(urlParamId);
     } else if (relationshipStatus === "FRIEND") {
-      handleRemoveFromFriendList(urlParams.id);
+      handleRemoveFromFriendList(urlParamId);
     }
   }
 
   function handleGoOnHomePage() {
-    navigate("/home")
-  }
-
-  function getUserIdFromUrlParams() {
-    if (!urlParams.id) {
-      console.warn("Cannot fetch user details because id is undefined");
-      return -1;
-    }
-    return parseInt(urlParams.id);
-  }
-
-  function handleClickShowPosts() {
-    setIsShowPosts(true);
-    setIsMoreAbout(false);
-  }
-
-  function handleClickMoreAbout() {
-    setIsMoreAbout(true);
-    setIsShowPosts(false);
+    navigate("/home");
   }
 
   return (
-    <div className={styles["profile"]}>
+    <div className={`${css["profile"]}`}>
       <ProfileHeader firstName={firstName} lastName={lastName} profilePictureUrl={profilePictureUrl}>
-        <ProfileHeaderButton text="Go to home page" handleClick={handleGoOnHomePage}/>
+        <ProfileHeaderButton text="Go to home page" handleClick={handleGoOnHomePage} />
         <ProfileHeaderButton style={{ marginRight: "12rem" }} text={btnText} handleClick={handleClickBtn} />
       </ProfileHeader>
-      <ProfileMain userId={getUserIdFromUrlParams()} isShowPosts={isShowPost} isMoreAbout={isMoreAbout}/>
-
-      <aside className={styles["profile__left-aside"]}>
-        <div className={`${styles["left-aside__show-posts"]}`} onClick={() => handleClickShowPosts()}>Show Posts</div>
-        <div className={`${styles["left-aside__more-about"]}`} onClick={() => handleClickMoreAbout()}>More about {firstName} {lastName}</div>
-      </aside>
+      {isCurrentUserAbleToCheckProfile ? (
+        <>
+          <ProfileMain
+            userId={urlParamId ? parseInt(urlParamId) : -1}
+            user={user as UserResponse}
+            isShowPosts={isShowPost}
+            isShowFriends={isShowFriends}
+            isMoreAbout={isMoreAbout}
+          />
+          <ProfileLeftAside
+            handleSetIsShowPosts={setIsShowPosts}
+            handleSetIsShowFriends={setIsShowFriends}
+            handleSetIsMoreAbout={setIsMoreAbout}
+            isSettingsComponentAvailable={false}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

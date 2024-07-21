@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import postService from "../../services/postService";
 import { PostComment, PostCommentResponse } from "../../types/post.types";
 import SubmitButton from "../button/SubmitButton";
-import styles from "./post.module.css";
+import css from "./post.module.css";
 import PostCommentComponent from "./PostComment";
 
 type PostCommentListProps = {
@@ -59,11 +59,11 @@ export default function PostCommentList(props: PostCommentListProps) {
   }, []);
 
   return (
-    <div className={styles["post__comments"]}>
-      <form onSubmit={(e) => handleAddComment(e)} className={styles["comments__create-comment"]}>
+    <div className={css["post__comments"]}>
+      <form onSubmit={(e) => handleAddComment(e)} className={css["comments__create-comment"]}>
         <textarea
           placeholder="Write comment!"
-          className={styles["create-comment__input-field"]}
+          className={css["create-comment__input-field"]}
           value={textareaValue}
           onChange={(e) => setTextareaValue(e.target.value)}
         />
@@ -77,7 +77,7 @@ export default function PostCommentList(props: PostCommentListProps) {
 
       {!isLast && postComments.length > 0 ? (
         <button
-          className={`${styles["comments__show-more-btn"]} ${styles["comments__show-more-btn--bgcolor-navy"]} ${styles["comments__show-more-btn--fcolor-white"]}`}
+          className={`${css["comments__show-more-btn"]}`}
           onClick={() => handleShowMoreComments()}
         >
           Show more comments

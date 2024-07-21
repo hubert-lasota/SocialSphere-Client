@@ -46,7 +46,7 @@ export default function ImageSlider(props: ImageSliderProps) {
 
       <div className="image-slider__right">
         <div className="image-slider__right__close-btn" onClick={handleExit}>
-          <FontAwesomeIcon icon={faX} size="4x" className="image-slider__right__close-btn__icon" />
+          <FontAwesomeIcon icon={faX} size="3x" className="image-slider__right__close-btn__icon" />
         </div>
         <button className="image-slider__right__btn " onClick={showNextImage}>
           <ArrowBigRight className="image-slider__right__btn__icon" />

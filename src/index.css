@@ -43,3 +43,10 @@ textarea {
 
   resize: none;
 }
+
+
+select {
+  appearance: none;
+  border: none;
+  outline: none;
+}

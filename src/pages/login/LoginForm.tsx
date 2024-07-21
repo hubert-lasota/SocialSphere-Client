@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import UsernameInput from "../../components/input/UsernameInput/UsernameInput";
 import PasswordInput from "../../components/input/PasswordInput/PasswordInput";
-import styles from "./login.module.css";
+import css from "./login.module.css";
 import SubmitButton from "../../components/button/SubmitButton";
 
 type LoginFormProps = {
@@ -26,14 +26,14 @@ export default function LoginForm(props: LoginFormProps) {
 
   return (
     <form
-      className={styles["login__sign-in"]}
+      className={css["login__sign-in"]}
       onSubmit={(event) => {
         event.preventDefault();
         handleSignIn(username, password);
       }}
     >
       <div
-        className={`${styles["sign-in__header"]} ${styles["sign-in__header--fslarge"]}`}
+        className={`${css["sign-in__header"]}`}
       >
         Sign in!
       </div>
@@ -49,13 +49,13 @@ export default function LoginForm(props: LoginFormProps) {
       <SubmitButton text="SIGN IN" />
 
       {isWarning ? (
-        <div className={styles["sign-in__warning"]}>
+        <div className={css["sign-in__warning"]}>
           <FontAwesomeIcon
             icon={faCircleExclamation}
-            className={`${styles["warning__icon"]} ${styles["warning__icon--red"]}`}
+            className={`${css["warning__icon"]}`}
             size="2x"
           />
-          <span className={`${styles["warning__text"]} ${styles["warning__text--red"]} ${styles["warning__text--fslarge"]}`}>
+          <span className={`${css["warning__text"]}`}>
             Invalid credentials. Try again!
           </span>
         </div>

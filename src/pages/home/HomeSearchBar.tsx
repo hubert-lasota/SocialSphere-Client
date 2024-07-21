@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
 import { RelationshipStatus, SearchUsers } from "../../types/user.types";
-import styles from "./home.module.css";
+import css from "./home.module.css";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
@@ -33,10 +33,10 @@ export default function HomeSearchBar() {
     if (inputString && inputString.length > 0) {
       handleSearchFriends(inputString);
       setIsSearchUsersListVisible(true);
-      inputRef.current?.classList.add(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
+      inputRef.current?.classList.add(css["search-bar__input--no-bdr-btm"], css["search-bar__input--bg-white"]);
     } else {
       setIsSearchUsersListVisible(false);
-      inputRef.current?.classList.remove(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
+      inputRef.current?.classList.remove(css["search-bar__input--no-bdr-btm"], css["search-bar__input--bg-white"]);
     }
   }, [inputString]);
 
@@ -50,7 +50,7 @@ export default function HomeSearchBar() {
       setIsSearchUsersListVisible(false);
       setInputString("");
       setSearchedUsers([]);
-      inputRef.current?.classList.remove(styles["search-bar__input--no-bdr-btm"], styles["search-bar__input--bg-white"]);
+      inputRef.current?.classList.remove(css["search-bar__input--no-bdr-btm"], css["search-bar__input--bg-white"]);
     }
   }
 
@@ -75,15 +75,11 @@ export default function HomeSearchBar() {
   }
 
   return (
-    <div className={styles["home__search-bar"]}>
-      <FontAwesomeIcon
-        icon={faMagnifyingGlass}
-        size="lg"
-        className={`${styles["search-bar__icon"]} ${styles["search-bar__icon--navy"]}`}
-      />
+    <div className={css["home__search-bar"]}>
+      <FontAwesomeIcon icon={faMagnifyingGlass} size="lg" className={`${css["search-bar__icon"]}`} />
       <input
         ref={inputRef}
-        className={`${styles["search-bar__input"]} ${styles["search-bar__input--bg-grey"]} ${styles["search-bar__input--fsmd"]}`}
+        className={`${css["search-bar__input"]}`}
         placeholder="Search friends"
         type="text"
         value={inputString}
@@ -95,7 +91,7 @@ export default function HomeSearchBar() {
       />
 
       {searchedUsers && isSearchUsersListVisible ? (
-        <div ref={userListRef} className={`${styles["search-bar__user-list"]} ${styles["search-bar__user-list--bg-white"]}`}>
+        <div ref={userListRef} className={`${css["search-bar__user-list"]}`}>
           {searchedUsers.map((u) => {
             let profilePictureUrl: string;
             if (u.profilePicture) {
@@ -106,20 +102,16 @@ export default function HomeSearchBar() {
             return (
               <div
                 key={u.userId}
-                className={styles["user-list__line"]}
+                className={css["user-list__line"]}
                 onClick={() => handleGoOnUserProfile(u.userId, u.relationshipStatus)}
               >
-                <img src={profilePictureUrl} className={styles["user-list__line__img"]} />
-                <div className={styles["user-list__line__details"]}>
-                  <div className={styles["line__details__name"]}>
-                    <p className={styles["details__name__text"]}>{u.firstName}</p>
-                    <p className={styles["details__name__text"]}>{u.lastName}</p>
+                <img src={profilePictureUrl} className={css["user-list__line__img"]} />
+                <div className={css["user-list__line__details"]}>
+                  <div className={css["line__details__name"]}>
+                    <p className={css["details__name__text"]}>{u.firstName}</p>
+                    <p className={css["details__name__text"]}>{u.lastName}</p>
                   </div>
-                  <div
-                    className={`${styles["line__details__relationship-status"]} ${styles["line__details__relationship-status--fssm"]}`}
-                  >
-                    {u.relationshipStatus}
-                  </div>
+                  <div className={`${css["line__details__relationship-status"]}`}>{u.relationshipStatus}</div>
                 </div>
               </div>
             );

@@ -4,14 +4,9 @@
   border-radius: 10px;
   margin-bottom: 1rem;
   position: relative;
-}
 
-.username--fsmd {
-  font-size: 1.2rem;
-}
-
-.username--border-white {
   border: 1px solid #eee;
+  font-size: 1.2rem;
 }
 
 .username__input {
@@ -19,6 +14,7 @@
   height: 100%;
   padding-left: 1rem;
   border-radius: 10px;
+  background-color: #eee;
 }
 
 .username__input:focus {
@@ -26,17 +22,11 @@
   box-shadow: 0px 0px 13px -1px rgba(21, 8, 100, 1);
 }
 
-.username__input--bg-white {
-  background-color: #eee;
-}
-
 .username__icon {
   position: absolute;
   right: 2rem;
   top: 50%;
   transform: translateY(-50%);
-}
 
-.username__icon--navy {
   color: #150864;
 }

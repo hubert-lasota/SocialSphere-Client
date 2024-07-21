@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import styles from "./password-input.module.css";
+import css from "./password-input.module.css";
 
 type PasswordInputProps = {
   password: string;
@@ -13,14 +13,14 @@ export default function PasswordInput(props: PasswordInputProps) {
   const { password, placeholder, handleChangePassword } = props;
 
   return (
-    <div className={`${styles["password"]} ${styles["password--fsmd"]} ${styles["password--border-white"]}`}>
+    <div className={`${css["password"]}`}>
       <FontAwesomeIcon
         icon={faLock}
-        className={`${styles["password__icon"]} ${styles["password__icon--navy"]}`}
+        className={`${css["password__icon"]}`}
       />
       <input
         type="password"
-        className={`${styles["password__input"]} ${styles["password__input--bg-white"]}`}
+        className={`${css["password__input"]}`}
         placeholder={placeholder}
         value={password}
         onChange={handleChangePassword}
