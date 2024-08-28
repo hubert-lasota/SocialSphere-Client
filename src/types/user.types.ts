@@ -1,11 +1,4 @@
-export interface SearchUsersResponse {
-  users: SearchUsers[];
-  code: string;
-  message?: string;
-  success: boolean;
-}
-
-export interface SearchUsers {
+export interface UserHeader {
   userId: number;
   firstName: string;
   lastName: string;
@@ -13,13 +6,10 @@ export interface SearchUsers {
   relationshipStatus: RelationshipStatus;
 }
 
-export interface UserResponse {
+export interface UserWrapper {
   user: User;
   userProfile: UserProfile;
-  userProfileConfig: UserProfileConfig;
-  code: string;
-  message: string;
-  success: boolean;
+  userProfileConfig: UserProfileConfig
 }
 
 export interface User {
@@ -30,26 +20,12 @@ export interface User {
 
 export type RelationshipStatus = "YOU" | "FRIEND" | "STRANGER";
 
-export interface UserProfileResponse {
-  userProfile: UserProfile;
-  code: string;
-  message: string;
-  success: boolean;
-}
-
 export interface UserProfile {
   firstName: string;
   lastName: string;
   city: string;
   country: string;
-  profilePicture: Uint8Array | File | null;
-}
-
-export interface UserProfileConfigResponse {
-  useProfileConfig: UserProfileConfig;
-  success: boolean;
-  code: string;
-  message: string;
+  profilePicture: string | null;
 }
 
 export interface UserProfileConfig {
@@ -67,16 +43,9 @@ export interface Friend {
   userProfile: UserProfile;
 }
 
-export interface FriendPage {
-  content: Friend[];
-  last: boolean;
-}
-
 export interface FriendRequestResponse {
-  response: { senderId: number; receiverId: number; status: FriendRequestStatus };
-  code: string;
-  message: string;
-  success: boolean;
+  senderId: number;
+  receiverId: number;
+  status: FriendRequestStatus;
 }
-
 export type FriendRequestStatus = "ACCEPTED" | "REJECTED" | "WAITING_FOR_RESPONSE";

@@ -1,25 +1,8 @@
 interface FetchService {
   get: (url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
-  post: (
-    url: string,
-    body: any,
-    params?: UrlParameter[],
-    headers?: [string, string][],
-    responseFormat?: ResponseFormat
-  ) => Promise<any>;
-  put: (
-    url: string,
-    body: any,
-    params?: UrlParameter[],
-    headers?: [string, string][],
-    responseFormat?: ResponseFormat
-  ) => Promise<any>;
-  deleteRequest: (
-    url: string,
-    params?: UrlParameter[],
-    headers?: [string, string][],
-    responseFormat?: ResponseFormat
-  ) => Promise<any>;
+  post: (url: string, body: any, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
+  put: (url: string, body: any, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
+  deleteRequest: (url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
 }
 
 export interface UrlParameter {
@@ -34,12 +17,7 @@ export enum ResponseFormat {
   ARRAYBUFFER,
 }
 
-function get(
-  url: string,
-  params?: UrlParameter[],
-  headers?: [string, string][],
-  responseFormat: ResponseFormat = ResponseFormat.JSON
-): Promise<any> {
+function get(url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat: ResponseFormat = ResponseFormat.JSON): Promise<any> {
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
@@ -58,26 +36,34 @@ function post(
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
-  const requestInit: RequestInit = {
-    headers: finalHeaders,
-    method: "POST",
-    body: JSON.stringify(body),
-  };
+  let requestInitBody;
+  if (body instanceof FormData) {
+    requestInitBody = body;
+  } else {
+    requestInitBody = JSON.stringify(body);
+  }
+  const requestInit: RequestInit = { headers: finalHeaders, method: "POST", body: requestInitBody };
   return request(finalUrl, requestInit, responseFormat);
 }
 
-function put(url: string, body: any | FormData, params?: UrlParameter[], headers?: [string, string][], responseFormat: ResponseFormat = ResponseFormat.JSON) {
+function put(
+  url: string,
+  body: any | FormData,
+  params?: UrlParameter[],
+  headers?: [string, string][],
+  responseFormat: ResponseFormat = ResponseFormat.JSON
+) {
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
   let requestInitBody;
-  if(body instanceof FormData) {
-    requestInitBody = body
+  if (body instanceof FormData) {
+    requestInitBody = body;
   } else {
     requestInitBody = JSON.stringify(body);
   }
 
-  const requestInit: RequestInit = { headers: finalHeaders, method: "PUT", body: requestInitBody};
+  const requestInit: RequestInit = { headers: finalHeaders, method: "PUT", body: requestInitBody };
 
   return request(finalUrl, requestInit, responseFormat);
 }
