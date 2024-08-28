@@ -58,8 +58,10 @@
 }
 
 .image-slider__main__counter__dot {
+  display: inline-block;
   width: 1rem;
   height: 1rem;
+  margin-right: 0.7rem;
   margin-bottom: 1.5rem;
   cursor: pointer;
 }

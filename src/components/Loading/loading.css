@@ -4,7 +4,7 @@
   padding: 8px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #150864;
+  background: var(--primary-color);
   --_m: 
     conic-gradient(#0000 10%,#000),
     linear-gradient(#000 0 0) content-box;
@@ -23,7 +23,7 @@
   height: 240px;
   width: 240px;
   border: 6px solid;
-  border-color: #150864 transparent #150864 transparent;
+  border-color: var(--primary-color) transparent var(--primary-color) transparent;
   border-radius: 50%;
   animation: spin 1.3s linear infinite;
 }

@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
 import { Navigate, Outlet } from "react-router-dom";
-import Loading from "./Loading/Loading";
-import { LoginTokenRequest } from "../types/auth.types";
+import useLocalStorage from "../hooks/useLocalStorage";
 import authService from "../services/authService";
+import { LoginTokenRequest } from "../types/auth.types";
+import Loading from "./loading/Loading";
 
 export default function PrivateRoutes() {
-  const [ jwtItem ] = useLocalStorage("jwt", "");
-  const [ usernameItem ] = useLocalStorage("username", "");
+  const [jwtItem] = useLocalStorage("jwt", "");
+  const [usernameItem] = useLocalStorage("username", "");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
 
   async function checkIsAuthorized() {
     const userToken: LoginTokenRequest = { username: usernameItem, jwt: jwtItem };
     const loginResponse = await authService.validateUserToken(userToken);
-    if(loginResponse.success) {
+    if (loginResponse.success) {
       setIsAuthorized(true);
       setLoading(false);
     }
@@ -25,7 +25,7 @@ export default function PrivateRoutes() {
   }, []);
 
   if (loading) {
-    return <Loading className="spinner"/>;
+    return <Loading pageLoading={true} />;
   }
 
   return isAuthorized ? <Outlet /> : <Navigate to="/login" />;
