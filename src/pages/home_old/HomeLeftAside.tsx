@@ -2,9 +2,10 @@ import { faPeopleLine } from "@fortawesome/free-solid-svg-icons/faPeopleLine";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import userService from "../../services/userService";
-import { UserResponse } from "../../types/user.types";
+import { UserWrapper } from "../../types/user.types";
 import { useNavigate } from "react-router-dom";
 import css from "./home.module.css";
+import { DataResult } from "../../types/common.types";
 
 export default function HomeLeftAside() {
   const [profilePictureUrl, setProfilePictureUrl] = useState<string>("");
@@ -14,17 +15,18 @@ export default function HomeLeftAside() {
   const navigate = useNavigate();
 
   async function handleFetchMyUserDetails() {
-    const response: UserResponse = await userService.getLoggedInUser();
+    const response: DataResult<UserWrapper> = await userService.getLoggedInUser();
     if(response?.success) {
-      if(response.userProfile.profilePicture) {
-        const profilePicUrl = `data:image/png;base64,${response.userProfile.profilePicture}`;
+      const data: UserWrapper = response.data; 
+      if(data.userProfile.profilePicture) {
+        const profilePicUrl = `data:image/png;base64,${data.userProfile.profilePicture}`;
         setProfilePictureUrl(profilePicUrl);
       } else {
         setProfilePictureUrl("src\assets\default-profile-picture.png");
       }
 
-      const fn = response.userProfile.firstName;
-      const ln = response.userProfile.lastName;
+      const fn = data.userProfile.firstName;
+      const ln = data.userProfile.lastName;
       setFirstName(fn);
       setLastName(ln);
     }

@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
-import Loading from "../../components/Loading/Loading";
-import PostList from "../../components/Post/PostList";
+import Loading from "../../components/loading/Loading";
+import PostList from "../../components/Post_old/PostList";
 import postService from "../../services/postService";
-import { Post, PostPage } from "../../types/post.types";
+import { DataResult, Page } from "../../types/common.types";
+import { Post } from "../../types/post.types";
 import css from "./home.module.css";
 
 export default function HomeMain() {
-  const [postPage, setPostPage] = useState<PostPage>();
+  const [postPage, setPostPage] = useState<Page<Post>>();
   const [posts, setPosts] = useState<Post[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [loading, setLoading] = useState(false);
 
   async function handleFetchPost(pageNumber: number) {
     setLoading(true);
-    const postPage: PostPage = await postService.findPostPageForCurrentUser(`${pageNumber}`, "5");
-    if (!postPage) {
+    const response: DataResult<Page<Post>> = await postService.findPostPageForCurrentUser(`${pageNumber}`, "5");
+    if (!response.success) {
       setLoading(false);
       return;
     }
-
+    const postPage = response.data;
     setPostPage(postPage);
     const postList: Post[] = [...posts, ...postPage.content];
     setPosts(postList);

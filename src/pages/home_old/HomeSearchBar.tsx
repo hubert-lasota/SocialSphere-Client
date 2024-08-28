@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
-import { RelationshipStatus, SearchUsers } from "../../types/user.types";
+import { RelationshipStatus, UserHeader } from "../../types/user.types";
 import css from "./home.module.css";
 
 export default function HomeSearchBar() {
   const [inputString, setInputString] = useState("");
   const [inputStringOnFocus, setInputStringOnFocus] = useState("");
-  const [searchedUsers, setSearchedUsers] = useState<SearchUsers[]>([
+  const [searchedUsers, setSearchedUsers] = useState<UserHeader[]>([
     { userId: -1, firstName: "", lastName: "", profilePicture: null, relationshipStatus: "YOU" },
   ]);
   const [isSearchUsersListVisible, setIsSearchUsersListVisible] = useState(false);
@@ -21,9 +21,10 @@ export default function HomeSearchBar() {
 
   async function handleSearchFriends(searchInputString: string) {
     const maxSize = "5";
-    const users = await userService.searchUsers(searchInputString, maxSize);
-    if (users && users.users) {
-      setSearchedUsers(users.users);
+    const response = await userService.searchUsers(searchInputString, maxSize);
+    if (response.data) {
+      const data = response.data;
+      setSearchedUsers(data);
     } else {
       setIsSearchUsersListVisible(false);
     }

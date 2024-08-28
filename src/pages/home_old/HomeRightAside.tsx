@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import userService from "../../services/userService";
-import { Friend, FriendPage } from "../../types/user.types";
+import { Friend } from "../../types/user.types";
 import { useNavigate } from "react-router-dom";
 import css from "./home.module.css";
+import { DataResult, Page } from "../../types/common.types";
 
 export default function HomeRightAside() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const navigate = useNavigate();
 
   async function handleFetchFriends() {
-    const friendPage: FriendPage = await userService.findMyFriends("0", "5");
-    if (friendPage.content) {
-      setFriends(friendPage.content);
+    const response: DataResult<Page<Friend>> = await userService.findMyFriends("0", "5");
+    if(response.success) {
+      const newFriends = response.data.content;
+      setFriends(newFriends);
     }
   }
 

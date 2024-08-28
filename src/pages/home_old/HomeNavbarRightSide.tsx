@@ -8,9 +8,10 @@ export default function HomeNavbarRightSide() {
   const navigate = useNavigate();
 
   async function handleFetchUserProfilePicture() {
-    const profilePicUrl = await userService.getLoggedInUserProfilePicutreUrl();
-    if(profilePicUrl) {
-      setProfilePictureUrl(profilePicUrl)
+    const response = await userService.getLoggedInUserProfilePicutre();
+    if(response.success) {
+      const pic = `data:image/png;base64, ${response.data}`;
+      setProfilePictureUrl(pic)
     } else {
       setProfilePictureUrl("src/assets/default-profile-picture.png");
     }
