@@ -10,11 +10,12 @@ export interface Post {
   likeCount: number;
   commentCount: number;
   isLiked: boolean;
+  createdAt: string;
 }
 
 export interface PostRequest {
   content: string;
-  images: File[] | null;
+  images: File[] | null | undefined;
 }
 
 export type AddPostResult = "success" | "error";
@@ -25,6 +26,7 @@ export interface PostComment {
   authorId: number;
   authorProfile: UserProfile;
   content: string;
+  createdAt: string;
 }
 
 export interface PostLike {

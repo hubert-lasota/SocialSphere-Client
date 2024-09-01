@@ -1,91 +1,79 @@
 import { DataResult, Page } from "../types/common.types";
 import { Friend, FriendRequestResponse, UserHeader, UserProfile, UserProfileConfig, UserWrapper } from "../types/user.types";
-import getFromLocalStorage from "../utils/getFromLocalStorage";
 import getJwtHeaderFromLocalStorage from "../utils/getJwtHeaderFromLocalStorage";
 import fetchService, { UrlParameter } from "./fetchService";
 
 interface UserService {
-  sendFriendRequest: (receiverId: string) => Promise<DataResult<FriendRequestResponse>>;
+  sendFriendRequest: (receiverId: number) => Promise<DataResult<FriendRequestResponse>>;
   getLoggedInUserProfilePicutre: () => Promise<DataResult<string>>;
   getLoggedInUser: () => Promise<DataResult<UserWrapper>>;
-  searchUsers: (containsString: string, maxSize: string) => Promise<DataResult<UserHeader[]>>;
-  findMyFriends: (pageNumber: string, pageSize: string) => Promise<DataResult<Page<Friend>>>;
-  findUserFriends: (userId: string, pageNumber: string, pageSize: string) => Promise<DataResult<Page<Friend>>>;
-  findUser: (userId: string) => Promise<DataResult<UserWrapper>>;
+  searchUsers: (containsString: string, size: number) => Promise<DataResult<UserHeader[]>>;
+  findMyFriends: (page: number, size: number) => Promise<DataResult<Page<Friend>>>;
+  findUserFriends: (userId: number, page: number, size: number) => Promise<DataResult<Page<Friend>>>;
+  findUser: (userId: number) => Promise<DataResult<UserWrapper>>;
   updateUserProfile: (userProfile: UserProfile) => Promise<DataResult<UserProfile>>;
   updateUserProfileConfig: (useProfileConfig: UserProfileConfig) => Promise<DataResult<UserProfileConfig>>;
-  removeFriendFromFriendList: (friendId: string) => Promise<void>;
+  removeFriendFromFriendList: (friendId: number) => Promise<void>;
 }
 
 const url = "http://localhost:8080/api/v1/user";
 const applicationJsonHeader: [string, string] = ["Content-Type", "application/json"];
 const jwtHeader: [string, string] = getJwtHeaderFromLocalStorage();
-const currentUserId = getFromLocalStorage("user_id");
 
-async function sendFriendRequest(receiverId: string): Promise<DataResult<FriendRequestResponse>> {
+async function sendFriendRequest(receiverId: number): Promise<DataResult<FriendRequestResponse>> {
   const finalUrl = url + "/friend/send";
-  const body = { senderId: currentUserId, receiverId: receiverId };
+  const body = { receiverId: receiverId.toString() };
 
-  return (await fetchService.post(finalUrl, body, undefined, [jwtHeader, applicationJsonHeader])) as Promise<
-    DataResult<FriendRequestResponse>
-  >;
+  return (await fetchService.post(finalUrl, body, undefined, [jwtHeader, applicationJsonHeader])) as Promise<DataResult<FriendRequestResponse>>;
 }
 
 async function getLoggedInUserProfilePicutre(): Promise<DataResult<string>> {
-  const urlParams: UrlParameter[] = [{ key: "userId", value: currentUserId }];
   const finalUrl = url + "/profile/picture";
 
-  return await fetchService.get(finalUrl, urlParams, [jwtHeader]);
+  return await fetchService.get(finalUrl, undefined, [jwtHeader]);
 }
 
 async function getLoggedInUser(): Promise<DataResult<UserWrapper>> {
-  const finalUrl = url + `/${currentUserId}`;
-
-  return (await fetchService.get(finalUrl, undefined, [jwtHeader])) as Promise<DataResult<UserWrapper>>;
+  return (await fetchService.get(url, undefined, [jwtHeader])) as Promise<DataResult<UserWrapper>>;
 }
 
-async function searchUsers(containsString: string, maxSize: string): Promise<DataResult<UserHeader[]>> {
+async function searchUsers(containsString: string, size: number): Promise<DataResult<UserHeader[]>> {
   const urlParams: UrlParameter[] = [
-    { key: "userId", value: currentUserId },
     { key: "containsString", value: containsString },
-    { key: "maxSize", value: maxSize },
+    { key: "size", value: size.toString() },
   ];
   const finalUrl = url + "/search";
   return (await fetchService.get(finalUrl, urlParams, [jwtHeader])) as Promise<DataResult<UserHeader[]>>;
 }
 
-async function findMyFriends(pageNumber: string, pageSize: string): Promise<DataResult<Page<Friend>>> {
+async function findMyFriends(page: number, size: number): Promise<DataResult<Page<Friend>>> {
   const finalUrl = url + "/friend";
   const urlParams: UrlParameter[] = [
-    { key: "userId", value: currentUserId },
-    { key: "page", value: pageNumber },
-    { key: "size", value: pageSize },
+    { key: "page", value: page.toString() },
+    { key: "size", value: size.toString() },
   ];
   return (await fetchService.get(finalUrl, urlParams, [jwtHeader])) as Promise<DataResult<Page<Friend>>>;
 }
 
-async function findUserFriends(userId: string, pageNumber: string, pageSize: string): Promise<DataResult<Page<Friend>>> {
+async function findUserFriends(userId: number, page: number, size: number): Promise<DataResult<Page<Friend>>> {
   const finalUrl = url + "/friend";
   const urlParams: UrlParameter[] = [
-    { key: "currentUserId", value: currentUserId },
-    { key: "userId", value: userId },
-    { key: "page", value: pageNumber },
-    { key: "size", value: pageSize },
+    { key: "userId", value: userId.toString() },
+    { key: "page", value: page.toString() },
+    { key: "size", value: size.toString() },
   ];
   return (await fetchService.get(finalUrl, urlParams, [jwtHeader])) as Promise<DataResult<Page<Friend>>>;
 }
 
-async function findUser(userId: string): Promise<DataResult<UserWrapper>> {
+async function findUser(userId: number): Promise<DataResult<UserWrapper>> {
   const finalUrl = url + `/${userId}`;
-  const urlParams: UrlParameter[] = [{ key: "currentUserId", value: currentUserId }];
 
-  return (await fetchService.get(finalUrl, urlParams, [jwtHeader, applicationJsonHeader])) as Promise<DataResult<UserWrapper>>;
+  return (await fetchService.get(finalUrl, undefined, [jwtHeader, applicationJsonHeader])) as Promise<DataResult<UserWrapper>>;
 }
 
 async function updateUserProfile(userProfile: UserProfile): Promise<DataResult<UserProfile>> {
   const { firstName, lastName, city, country, profilePicture } = userProfile;
   const finalUrl = url + "/profile";
-  const urlParams: UrlParameter[] = [{ key: "userId", value: currentUserId }];
 
   const formData = new FormData();
   if (profilePicture) {
@@ -97,24 +85,20 @@ async function updateUserProfile(userProfile: UserProfile): Promise<DataResult<U
   const requestBlob = new Blob([JSON.stringify(userProfileRequest)], { type: "application/json" });
   formData.append("request", requestBlob);
 
-  return (await fetchService.put(finalUrl, formData, urlParams, [jwtHeader])) as Promise<DataResult<UserProfile>>;
+  return (await fetchService.put(finalUrl, formData, undefined, [jwtHeader])) as Promise<DataResult<UserProfile>>;
 }
 
 async function updateUserProfileConfig(userProfileConfig: UserProfileConfig): Promise<DataResult<UserProfileConfig>> {
-  const urlParams: UrlParameter[] = [{ key: "userId", value: currentUserId }];
   const finalUrl = url + "/profile/config";
 
-  return (await fetchService.put(finalUrl, userProfileConfig, urlParams, [applicationJsonHeader, jwtHeader])) as Promise<
+  return (await fetchService.put(finalUrl, userProfileConfig, undefined, [applicationJsonHeader, jwtHeader])) as Promise<
     DataResult<UserProfileConfig>
   >;
 }
 
-async function removeFriendFromFriendList(friendId: string): Promise<void> {
+async function removeFriendFromFriendList(friendId: number): Promise<void> {
   const finalUrl = url + "/friend/remove";
-  const urlParams: UrlParameter[] = [
-    { key: "userId", value: currentUserId },
-    { key: "friendId", value: friendId },
-  ];
+  const urlParams: UrlParameter[] = [{ key: "friendId", value: friendId.toString() }];
 
   await fetchService.deleteRequest(finalUrl, urlParams, [jwtHeader]);
 }

@@ -1,125 +1,350 @@
-import { faComments, faHeart as faHeartEmpty } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import postService from "../../services/postService";
-import { PostLikeResponse } from "../../types/post.types";
+import { FileDetails } from "../../types/common.types";
+import { Post as IPost, PostComment as IPostComment } from "../../types/post.types";
+import base64ToImgSrc from "../../utils/base64ToImgSrc";
+import fileDetailsToFile from "../../utils/fileDetailsToFile";
+import fileToFileDetails from "../../utils/fileToFileDetails";
+import getDateDifference from "../../utils/getDateDifference";
+import getUserProfileImgSrc from "../../utils/getUserProfileImgSrc";
+import Button from "../button/Button";
+import FileUploader from "../file_uploader/FileUploader";
+import ImageSlider from "../image_slider/ImageSlider";
+import AddPostComment from "./AddPostComment";
 import css from "./post.module.css";
-import PostCommentList from "./PostCommentList";
+import PostComment from "./PostComment";
+import PostFooter from "./PostFooter";
+import PostHeader from "./PostHeader";
 
 type PostProps = {
-  id: number;
-  userId: number;
-  profilePictureSrc: string;
-  firstName: string;
-  lastName: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-  isLiked: boolean;
-  children?: React.ReactNode;
+  post: IPost;
+  onDeletePost: (postId: number) => void
 };
 
 export default function Post(props: PostProps) {
-  const { id, userId, profilePictureSrc, firstName, lastName, content, likeCount, commentCount, isLiked, children } = props;
-  const [currentUserId] = useLocalStorage("user_id", "");
+  const { post, onDeletePost } = props;
+  const { firstName, lastName, profilePicture } = post.userProfile;
+  const { id, userId, content: initialContent, images: initialImages, isLiked, likeCount, commentCount, createdAt } = post;
+
+  const [content, setContent] = useState<string>(initialContent);
+  const [images, setImages] = useState<FileDetails[] | null>(initialImages);
   const [isPostLiked, setIsPostLiked] = useState<boolean>(isLiked);
-  const [likeCounter, setLikeCounter] = useState<number>(likeCount);
-  const [commentCounter, setCommentCounter] = useState<number>(commentCount);
-  const [arePostCommentsOpen, setArePostCommentsOpen] = useState<boolean>(false);
+  const [isImgSliderOpen, setIsImgSliderOpen] = useState<boolean>(false);
+  const [isEditModeOn, setIsEditModeOn] = useState<boolean>(false);
+  const [areCommentsOpen, setAreCommentsOpen] = useState<boolean>(false);
+  const [comments, setComments] = useState<IPostComment[]>([]);
+  const [currentUserId] = useLocalStorage("user_id", "");
+
+  const [editableContent, setEditableContent] = useState<string>(content);
+  const [editableImages, setEditableImages] = useState<FileDetails[] | null>(images);
+
+  const isPostAuthorBtnShown = useRef<boolean>(currentUserId === userId);
+  const likesSum = useRef<number>(likeCount);
+  const commentsSum = useRef<number>(commentCount);
+  const commentPage = useRef<number>(0);
+  const isLastCommentPage = useRef<boolean>(false);
+  const imgSliderInitialIndex = useRef<number>(0);
+  const imgSliderUrls = useRef<string[]>([]);
+
   const navigate = useNavigate();
 
-  function handleGoOnUserPage(userId: number) {
+  const handleAddLike = async () => {
+    const response = await postService.addLikeToPost(id);
+    if (response.success) {
+      likesSum.current += 1;
+      setIsPostLiked(true);
+    }
+  };
+
+  const handleRemoveLike = async () => {
+    const response = await postService.removeLikeFromPost(id);
+    if (response.success) {
+      likesSum.current -= 1;
+      setIsPostLiked(false);
+    }
+  };
+
+  const handleOpenComments = async () => {
+    if (areCommentsOpen) {
+      setAreCommentsOpen(false);
+      return;
+    }
+
+    if (comments.length > 0) {
+      setAreCommentsOpen(true);
+      return;
+    }
+
+    const response = await postService.findPostCommentPage(id, commentPage.current, 5);
+    if (response.success) {
+      const page = response.data;
+      isLastCommentPage.current = page.last;
+      commentPage.current += 1;
+      setComments(page.content);
+    } else {
+      isLastCommentPage.current = true;
+    }
+    setAreCommentsOpen(true);
+  };
+
+  const handleClickProfileImg = () => {
     if (currentUserId === userId) {
       navigate("/me");
     } else {
       navigate(`/user/${userId}`);
     }
-  }
+  };
 
-  async function handleAddLikeToPost(postId: number) {
-    const response: PostLikeResponse = await postService.addLikeToPost(postId.toString());
-    if (response.success) {
-      const newLikeCount = likeCounter + 1;
-      setLikeCounter(newLikeCount);
-      setIsPostLiked(true);
+  const handleShowMoreComments = async () => {
+    if (isLastCommentPage.current) {
+      return [];
     }
-  }
 
-  async function handleRemoveLikeFromPost(postId: number) {
-    const response: PostLikeResponse = await postService.removeLikeFromPost(postId.toString());
+    const response = await postService.findPostCommentPage(id, commentPage.current, 5);
     if (response.success) {
-      const newLikeCount = likeCounter - 1;
-      setLikeCounter(newLikeCount);
-      setIsPostLiked(false);
-    }
-  }
-
-  function handleOpenPostComments() {
-    if (arePostCommentsOpen) {
-      setArePostCommentsOpen(false);
+      const page = response.data;
+      isLastCommentPage.current = page.last;
+      commentPage.current++;
+      setComments((prev) => [...prev, ...page.content]);
     } else {
-      setArePostCommentsOpen(true);
+      isLastCommentPage.current = true;
+      return [];
     }
+  };
+
+  const handleAddPostComment = async (content: string) => {
+    const response = await postService.createPostComment(id, content);
+    if (response.success) {
+      commentsSum.current++;
+      const comment = response.data;
+      setComments((prev) => [comment, ...prev]);
+    }
+  };
+
+  const handleOpenEditMode = () => {
+    isPostAuthorBtnShown.current = false;
+    setIsEditModeOn(true);
+  };
+
+  const handleImagesUpload = (images: File[]) => {
+    const fileDetailsPromiseArr = images.map((img) => fileToFileDetails(img, false));
+    Promise.all(fileDetailsPromiseArr)
+      .then((imgs) => setEditableImages(imgs))
+      .catch((err) => console.error(err));
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const newImgs = editableImages?.splice(index, index);
+    if (newImgs) setImages(newImgs);
+  };
+
+  const handleCancelUpdate = () => {
+    isPostAuthorBtnShown.current = currentUserId === userId;
+    setIsEditModeOn(false);
+    setEditableImages(images);
+    setEditableContent(content);
+  };
+
+  const handleUpdatePost = async () => {
+    const files = editableImages?.map((img) => fileDetailsToFile(img));
+    const response = await postService.updatePost(id, { content: editableContent, images: files });
+    if (response.success) {
+      setContent(editableContent);
+      setImages(editableImages);
+    }
+    isPostAuthorBtnShown.current = currentUserId === userId;
+    setIsEditModeOn(false);
+  };
+
+  const handleDeletePost = () => {
+    onDeletePost(id);
   }
 
-  function handleIncementCommentCounter() {
-    const newValue = commentCounter + 1;
-    setCommentCounter(newValue);
+  const handleDeletePostComment = async (postCommentId: number) => {
+    const response = await postService.deletePostComment(postCommentId);
+    if (response.success) {
+      const coms = comments.filter((c) => c.id !== postCommentId);
+      setComments(coms);
+      commentsSum.current--;
+    }
+  };
+
+  const handleOpenImageSlider = (imgUrls: string[], imgIndex: number) => {
+    imgSliderInitialIndex.current = imgIndex;
+    imgSliderUrls.current = imgUrls;
+    setIsImgSliderOpen(true);
+  };
+
+  const handleCloseImageSlider = () => {
+    setIsImgSliderOpen(false);
+  };
+
+  if (isImgSliderOpen) {
+    return createPortal(
+      <ImageSlider imageUrls={imgSliderUrls.current} imageInitialIndex={imgSliderInitialIndex.current} onCloseImageSlider={handleCloseImageSlider} />,
+      document.getElementById("portal")!
+    );
   }
+
+  const getFilesFromImgs = () => {
+    return editableImages?.map((img) => fileDetailsToFile(img));
+  };
 
   return (
-    <div key={id} className={`${css["post"]}`}>
-      <div className={css["post__header"]}>
-        <img
-          src={profilePictureSrc}
-          alt="profile"
-          className={css["header__profile-picture"]}
-          onClick={() => handleGoOnUserPage(userId)}
+    <div className={css["post"]}>
+      <PostHeader
+        profileImgSrc={getUserProfileImgSrc(profilePicture)}
+        onClickProfileImg={handleClickProfileImg}
+        firstName={firstName}
+        lastName={lastName}
+        isCurrentUserPostAutor={isPostAuthorBtnShown.current}
+        onEdit={handleOpenEditMode}
+        onDelete={handleDeletePost}
+        dateDiff={getDateDifference(new Date(createdAt))}
+      />
+      {isEditModeOn ? (
+        <textarea
+          placeholder="Edit post content!"
+          className={css["post__content-editable"]}
+          value={editableContent}
+          onChange={(e) => setEditableContent(e.target.value)}
         />
-        <div className={css["header__name"]}>
-          <span className={`${css["header__name__text"]}`}>{firstName}</span>
-          <span className={`${css["header__name__text"]}`}>{lastName}</span>
+      ) : (
+        <div className={css["post__content"]}>{content}</div>
+      )}
+
+      {isEditModeOn ? (
+        <FileUploader
+          onFilesUpload={handleImagesUpload}
+          onFileRemove={handleRemoveImage}
+          initialFiles={getFilesFromImgs()}
+          addFileMessage="Add images to your post!"
+        />
+      ) : (
+        createImageComponent(images, handleOpenImageSlider)
+      )}
+      {isEditModeOn ? (
+        <div className={css["post__editable-btns"]}>
+          <Button styleType="secondary" onClick={handleCancelUpdate}>
+            Cancel
+          </Button>
+          <Button styleType="primary" onClick={handleUpdatePost}>
+            Update
+          </Button>
         </div>
-      </div>
-      <div className={css["post__content"]}>
-        <p className={`${css["content__text"]}`}>{content}</p>
-        {children}
-      </div>
-      <div className={css["post__footer"]}>
-        <div className={css["footer__like"]}>
-          <div className={css["like__icon"]}>
-            {isPostLiked ? (
-              <FontAwesomeIcon
-                icon={faHeartFilled}
-                size="xl"
-                onClick={() => handleRemoveLikeFromPost(id)}
-                className={`${css["like__filled-icon"]}`}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faHeartEmpty}
-                size="xl"
-                onClick={() => handleAddLikeToPost(id)}
-                className={css["like__empty-icon"]}
-              />
-            )}
-          </div>
-          <span className={css["like__text"]}>
-            {likeCounter > 1 ? likeCounter : ""} {likeCounter > 1 && likeCounter !== 0 ? "people like that post" : ""}
-            {likeCounter === 0 ? "" : "one person likes that post"}
-          </span>
-        </div>
-        <div className={css["footer__comment"]} onClick={() => handleOpenPostComments()}>
-          <div className={css["footer__comment__box"]}>
-            <FontAwesomeIcon icon={faComments} size="xl" />
-            <span className={css["footer__comment__box__text"]}>{commentCounter} comments</span>
-          </div>
-        </div>
-      </div>
-      {arePostCommentsOpen ? <PostCommentList postId={id} handleIncrementCommentCounter={handleIncementCommentCounter} /> : <></>}
+      ) : (
+        <PostFooter
+          isPostLiked={isPostLiked}
+          likesSum={likesSum.current}
+          commentsSum={commentsSum.current}
+          onAddLike={handleAddLike}
+          onRemoveLike={handleRemoveLike}
+          onOpenComments={handleOpenComments}
+        />
+      )}
+      {areCommentsOpen && (
+        <>
+          <AddPostComment onAddPostComment={handleAddPostComment} />
+          {comments.length > 0 &&
+            comments.map((comment) => {
+              return <PostComment comment={comment} postId={id} onDelete={handleDeletePostComment} />;
+            })}
+          {!isLastCommentPage.current && (
+            <div className={css["comment__show-more-btn"]} onClick={handleShowMoreComments}>
+              <span>Show more comments</span>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
+
+const createImageComponent = (
+  images: FileDetails[] | null,
+  onOpenImageSlider: (imgUrls: string[], imageInitialIndex: number) => void
+): JSX.Element => {
+  if (!images || images.length === 0) {
+    return <></>;
+  }
+  const imgUrls = images.map((img) => base64ToImgSrc(img.content));
+
+  const imgLength = imgUrls.length;
+
+  const ImgWrapper = (props: { children: React.ReactNode }) => {
+    return <div className={css["post__images"]}>{props.children}</div>;
+  };
+
+  const RowOfTwoImgs = (props: { imgSrcOne: string; imgSrcTwo: string; indexOne: number; indexTwo: number }) => {
+    const { imgSrcOne, imgSrcTwo, indexOne, indexTwo } = props;
+    return (
+      <div className={css["post__images__row"]}>
+        <img src={imgSrcOne} className={css["post__images__double"]} onClick={() => onOpenImageSlider(imgUrls, indexOne)} />
+        <img src={imgSrcTwo} className={css["post__images__double"]} onClick={() => onOpenImageSlider(imgUrls, indexTwo)} />
+      </div>
+    );
+  };
+
+  const RowOfSingleImg = (props: { imgSrc: string; index: number }) => {
+    return (
+      <div className={css["post__images__row"]}>
+        <img src={props.imgSrc} className={css["post__images__single"]} onClick={() => onOpenImageSlider(imgUrls, props.index)} />
+      </div>
+    );
+  };
+
+  if (imgLength > 4) {
+    const sizeOfMoreImgs = imgLength - 3;
+
+    return (
+      <ImgWrapper>
+        <RowOfTwoImgs imgSrcOne={imgUrls[0]} imgSrcTwo={imgUrls[1]} indexOne={0} indexTwo={1} />
+        <div className={css["post__images__row"]}>
+          <img src={imgUrls[2]} className={css["post__images__double"]} onClick={() => onOpenImageSlider(imgUrls, 2)} />
+          <div className={css["post__images__more-photos"]} onClick={() => onOpenImageSlider(imgUrls, 3)}>
+            Click to see {sizeOfMoreImgs} more photos.
+          </div>
+        </div>
+      </ImgWrapper>
+    );
+  }
+
+  if (imgLength === 4) {
+    return (
+      <ImgWrapper>
+        <RowOfTwoImgs imgSrcOne={imgUrls[0]} imgSrcTwo={imgUrls[1]} indexOne={0} indexTwo={1} />
+        <RowOfTwoImgs imgSrcOne={imgUrls[2]} imgSrcTwo={imgUrls[3]} indexOne={2} indexTwo={3} />
+      </ImgWrapper>
+    );
+  }
+
+  if (imgLength === 3) {
+    return (
+      <ImgWrapper>
+        <RowOfTwoImgs imgSrcOne={imgUrls[0]} imgSrcTwo={imgUrls[1]} indexOne={0} indexTwo={1} />
+        <RowOfSingleImg imgSrc={imgUrls[2]} index={2} />
+      </ImgWrapper>
+    );
+  }
+
+  if (imgLength === 2) {
+    return (
+      <ImgWrapper>
+        <RowOfTwoImgs imgSrcOne={imgUrls[0]} imgSrcTwo={imgUrls[1]} indexOne={0} indexTwo={1} />
+      </ImgWrapper>
+    );
+  }
+
+  if (imgLength === 1) {
+    return (
+      <ImgWrapper>
+        <img src={imgUrls[0]} onClick={() => onOpenImageSlider(imgUrls, 0)} className={css["post__images__single"]} />
+      </ImgWrapper>
+    );
+  }
+
+  return <></>;
+};
