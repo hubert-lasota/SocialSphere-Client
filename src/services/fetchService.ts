@@ -83,9 +83,7 @@ function deleteRequest(
 }
 
 function request(url: string, requestInit: RequestInit, responseFormat: ResponseFormat): Promise<any> {
-  return fetch(url, requestInit)
-    .then((response) => extractResponseBody(response, responseFormat))
-    .catch((error) => console.error(`Error occured with ${requestInit.method} and URL: ${url}`, error));
+  return fetch(url, requestInit).then((response) => extractResponseBody(response, responseFormat));
 }
 
 function extractUrlParams(params: UrlParameter[]): string {

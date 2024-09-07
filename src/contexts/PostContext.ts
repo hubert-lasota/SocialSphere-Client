@@ -3,6 +3,7 @@ import { PostRequest } from "../types/post.types";
 
 type PostContextValue = {
   onAddPost: (post: PostRequest) => Promise<void>;
+  onDeletePost: (postId: number) => Promise<void>;
 };
 
 export const PostContext = createContext<PostContextValue | undefined>(undefined);

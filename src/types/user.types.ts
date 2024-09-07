@@ -2,7 +2,7 @@ export interface UserHeader {
   userId: number;
   firstName: string;
   lastName: string;
-  profilePicture: Uint8Array | null;
+  profilePicture: string | null;
   relationshipStatus: RelationshipStatus;
 }
 
