@@ -12,6 +12,7 @@
 }
 
 .menu {
+  z-index: 100005;
   cursor: pointer;
   background-color: var(--outer-background-color);
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);

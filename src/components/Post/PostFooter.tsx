@@ -10,11 +10,12 @@ type PostFooterProps = {
   commentsSum: number;
   onAddLike: () => void;
   onRemoveLike: () => void;
-  onOpenComments: () => void;
+  onClickComments: () => void;
 };
 
 export default function PostFooter(props: PostFooterProps) {
-  const { isPostLiked, likesSum, commentsSum, onAddLike, onRemoveLike, onOpenComments } = props;
+  const { isPostLiked, likesSum, commentsSum, onAddLike, onRemoveLike, onClickComments } = props;
+
   return (
     <div className={css["post__footer"]}>
       <div className={css["footer__like"]}>
@@ -25,7 +26,7 @@ export default function PostFooter(props: PostFooterProps) {
         )}
         <div className={css["like__count"]}>{likesSum}</div>
       </div>
-      <div className={css["footer__comment"]} onClick={onOpenComments}>
+      <div className={css["footer__comment"]} onClick={onClickComments}>
         <FaRegCommentDots size={25} />
         {commentsSum}
       </div>

@@ -6,7 +6,6 @@ import { PostComment as IPostComment } from "../../types/post.types";
 import base64ToImgSrc from "../../utils/base64ToImgSrc";
 import getDateDifference from "../../utils/getDateDifference";
 import getDefaultUserProfilePictureSrc from "../../utils/getDefaultUserProfilePictureSrc";
-import "..//../css/global.css";
 import Button from "../button/Button";
 import css from "./post.module.css";
 import PostCommentAuthorButton from "./PostCommentAuthorButton";

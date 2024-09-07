@@ -24,6 +24,7 @@
 }
 
 .details__profile {
+  cursor: pointer;
   border-radius: 50%;
   max-height: 50px;
   width: auto;

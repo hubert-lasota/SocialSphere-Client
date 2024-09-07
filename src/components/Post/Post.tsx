@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { usePostContext } from "../../contexts/PostContext";
+import useIsCurrentUser from "../../hooks/useIsCurrentUser";
+import useNavigateToUserProfile from "../../hooks/useNavigateToUserProfile";
 import postService from "../../services/postService";
 import { FileDetails } from "../../types/common.types";
-import { Post as IPost, PostComment as IPostComment } from "../../types/post.types";
+import { Post as IPost } from "../../types/post.types";
 import base64ToImgSrc from "../../utils/base64ToImgSrc";
 import fileDetailsToFile from "../../utils/fileDetailsToFile";
 import fileToFileDetails from "../../utils/fileToFileDetails";
@@ -18,16 +19,20 @@ import css from "./post.module.css";
 import PostComment from "./PostComment";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
+import useFetchPostComments from "./useFetchPostComments";
 
 type PostProps = {
   post: IPost;
-  onDeletePost: (postId: number) => void
 };
 
 export default function Post(props: PostProps) {
-  const { post, onDeletePost } = props;
+  const { post } = props;
   const { firstName, lastName, profilePicture } = post.userProfile;
   const { id, userId, content: initialContent, images: initialImages, isLiked, likeCount, commentCount, createdAt } = post;
+  const { onDeletePost } = usePostContext();
+  const { comments, setComments, last, fetchNextCommentPage } = useFetchPostComments(id);
+  const navigateToUserProfile = useNavigateToUserProfile();
+  const isCurrentUserPostAuthor = useIsCurrentUser(userId);
 
   const [content, setContent] = useState<string>(initialContent);
   const [images, setImages] = useState<FileDetails[] | null>(initialImages);
@@ -35,26 +40,20 @@ export default function Post(props: PostProps) {
   const [isImgSliderOpen, setIsImgSliderOpen] = useState<boolean>(false);
   const [isEditModeOn, setIsEditModeOn] = useState<boolean>(false);
   const [areCommentsOpen, setAreCommentsOpen] = useState<boolean>(false);
-  const [comments, setComments] = useState<IPostComment[]>([]);
-  const [currentUserId] = useLocalStorage("user_id", "");
 
   const [editableContent, setEditableContent] = useState<string>(content);
   const [editableImages, setEditableImages] = useState<FileDetails[] | null>(images);
 
-  const isPostAuthorBtnShown = useRef<boolean>(currentUserId === userId);
+  const isPostAuthorBtnShown = useRef<boolean>(isCurrentUserPostAuthor);
   const likesSum = useRef<number>(likeCount);
   const commentsSum = useRef<number>(commentCount);
-  const commentPage = useRef<number>(0);
-  const isLastCommentPage = useRef<boolean>(false);
   const imgSliderInitialIndex = useRef<number>(0);
   const imgSliderUrls = useRef<string[]>([]);
-
-  const navigate = useNavigate();
 
   const handleAddLike = async () => {
     const response = await postService.addLikeToPost(id);
     if (response.success) {
-      likesSum.current += 1;
+      likesSum.current++;
       setIsPostLiked(true);
     }
   };
@@ -62,57 +61,13 @@ export default function Post(props: PostProps) {
   const handleRemoveLike = async () => {
     const response = await postService.removeLikeFromPost(id);
     if (response.success) {
-      likesSum.current -= 1;
+      likesSum.current--;
       setIsPostLiked(false);
     }
   };
 
-  const handleOpenComments = async () => {
-    if (areCommentsOpen) {
-      setAreCommentsOpen(false);
-      return;
-    }
-
-    if (comments.length > 0) {
-      setAreCommentsOpen(true);
-      return;
-    }
-
-    const response = await postService.findPostCommentPage(id, commentPage.current, 5);
-    if (response.success) {
-      const page = response.data;
-      isLastCommentPage.current = page.last;
-      commentPage.current += 1;
-      setComments(page.content);
-    } else {
-      isLastCommentPage.current = true;
-    }
-    setAreCommentsOpen(true);
-  };
-
-  const handleClickProfileImg = () => {
-    if (currentUserId === userId) {
-      navigate("/me");
-    } else {
-      navigate(`/user/${userId}`);
-    }
-  };
-
-  const handleShowMoreComments = async () => {
-    if (isLastCommentPage.current) {
-      return [];
-    }
-
-    const response = await postService.findPostCommentPage(id, commentPage.current, 5);
-    if (response.success) {
-      const page = response.data;
-      isLastCommentPage.current = page.last;
-      commentPage.current++;
-      setComments((prev) => [...prev, ...page.content]);
-    } else {
-      isLastCommentPage.current = true;
-      return [];
-    }
+  const handleClickComments = () => {
+    setAreCommentsOpen((prev) => !prev);
   };
 
   const handleAddPostComment = async (content: string) => {
@@ -142,7 +97,7 @@ export default function Post(props: PostProps) {
   };
 
   const handleCancelUpdate = () => {
-    isPostAuthorBtnShown.current = currentUserId === userId;
+    isPostAuthorBtnShown.current = isCurrentUserPostAuthor;
     setIsEditModeOn(false);
     setEditableImages(images);
     setEditableContent(content);
@@ -155,13 +110,13 @@ export default function Post(props: PostProps) {
       setContent(editableContent);
       setImages(editableImages);
     }
-    isPostAuthorBtnShown.current = currentUserId === userId;
+    isPostAuthorBtnShown.current = isCurrentUserPostAuthor;
     setIsEditModeOn(false);
   };
 
   const handleDeletePost = () => {
     onDeletePost(id);
-  }
+  };
 
   const handleDeletePostComment = async (postCommentId: number) => {
     const response = await postService.deletePostComment(postCommentId);
@@ -197,7 +152,7 @@ export default function Post(props: PostProps) {
     <div className={css["post"]}>
       <PostHeader
         profileImgSrc={getUserProfileImgSrc(profilePicture)}
-        onClickProfileImg={handleClickProfileImg}
+        onClickProfileImg={() => navigateToUserProfile(userId)}
         firstName={firstName}
         lastName={lastName}
         isCurrentUserPostAutor={isPostAuthorBtnShown.current}
@@ -242,7 +197,7 @@ export default function Post(props: PostProps) {
           commentsSum={commentsSum.current}
           onAddLike={handleAddLike}
           onRemoveLike={handleRemoveLike}
-          onOpenComments={handleOpenComments}
+          onClickComments={handleClickComments}
         />
       )}
       {areCommentsOpen && (
@@ -250,10 +205,10 @@ export default function Post(props: PostProps) {
           <AddPostComment onAddPostComment={handleAddPostComment} />
           {comments.length > 0 &&
             comments.map((comment) => {
-              return <PostComment comment={comment} postId={id} onDelete={handleDeletePostComment} />;
+              return <PostComment comment={comment} postId={id} onDelete={handleDeletePostComment} key={comment.id}/>;
             })}
-          {!isLastCommentPage.current && (
-            <div className={css["comment__show-more-btn"]} onClick={handleShowMoreComments}>
+          {!last && (
+            <div className={css["comment__show-more-btn"]} onClick={fetchNextCommentPage}>
               <span>Show more comments</span>
             </div>
           )}
