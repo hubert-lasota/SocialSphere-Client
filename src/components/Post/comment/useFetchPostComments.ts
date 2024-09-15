@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import postService from "../../services/postService";
-import { PostComment } from "../../types/post.types";
+import postService from "../../../services/postService";
+import { PostComment } from "../../../types/post.types";
 
 export default function useFetchPostComments(postId: number) {
   const [comments, setComments] = useState<PostComment[]>([]);

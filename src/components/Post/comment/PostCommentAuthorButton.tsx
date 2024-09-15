@@ -1,4 +1,4 @@
-import Dropdown from "../dropdown/Dropdown";
+import Dropdown from "../../dropdown/Dropdown";
 
 type PostCommentAuthorButtonProps = {
   onEdit: () => void;
@@ -18,4 +18,3 @@ export default function PostCommentAuthorButton(props: PostCommentAuthorButtonPr
     </Dropdown>
   );
 }
-

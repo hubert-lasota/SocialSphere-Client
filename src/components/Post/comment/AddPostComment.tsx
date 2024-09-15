@@ -1,10 +1,10 @@
 import { useState } from "react";
-import useFetchCurrentUserProfilePicture from "../../hooks/useFetchCurrentUserProfilePicture";
-import Button from "../button/Button";
-import css from "./post.module.css";
+import useFetchCurrentUserProfilePicture from "../../../hooks/useFetchCurrentUserProfilePicture";
+import Button from "../../button/Button";
+import css from "../post.module.css";
 
 type AddPostCommentProps = {
-  onAddPostComment: (content: string) => Promise<void>;
+  onAddPostComment: (content: string) => void;
 };
 
 export default function AddPostComment(props: AddPostCommentProps) {
@@ -26,9 +26,9 @@ export default function AddPostComment(props: AddPostCommentProps) {
     setIsEditable(false);
   };
 
-  const handleAddPostComment = async () => {
-    await onAddPostComment(content);
-    setContent("")
+  const handleAddPostComment = () => {
+    onAddPostComment(content);
+    setContent("");
     setIsEditable(false);
   };
 

@@ -1,19 +1,19 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import postService from "../../services/postService";
-import { PostComment as IPostComment } from "../../types/post.types";
-import base64ToImgSrc from "../../utils/base64ToImgSrc";
-import getDateDifference from "../../utils/getDateDifference";
-import getDefaultUserProfilePictureSrc from "../../utils/getDefaultUserProfilePictureSrc";
-import Button from "../button/Button";
-import css from "./post.module.css";
+import useLocalStorage from "../../../hooks/useLocalStorage";
+import postService from "../../../services/postService";
+import { PostComment as IPostComment } from "../../../types/post.types";
+import base64ToImgSrc from "../../../utils/base64ToImgSrc";
+import getDateDifference from "../../../utils/getDateDifference";
+import getDefaultUserProfilePictureSrc from "../../../utils/getDefaultUserProfilePictureSrc";
+import Button from "../../button/Button";
 import PostCommentAuthorButton from "./PostCommentAuthorButton";
+import css from "../post.module.css";
 
 type PostCommentProps = {
   comment: IPostComment;
   postId: number;
-  onDelete: (postCommentId: number) => void
+  onDelete: (postCommentId: number) => void;
 };
 
 export default function PostComment(props: PostCommentProps) {
@@ -59,8 +59,8 @@ export default function PostComment(props: PostCommentProps) {
   };
 
   const handleDeletePostComment = async () => {
-    await onDelete(id)
-  }
+    await onDelete(id);
+  };
 
   const updateComment = async () => {
     const response = await postService.updatePostComment(comment.id, postId, editableContent);
@@ -101,7 +101,9 @@ export default function PostComment(props: PostCommentProps) {
             <Button styleType="secondary" onClick={cancelUpdate}>
               Cancel
             </Button>
-            <Button styleType="primary" onClick={updateComment}>Update</Button>
+            <Button styleType="primary" onClick={updateComment}>
+              Update
+            </Button>
           </div>
         )}
       </div>

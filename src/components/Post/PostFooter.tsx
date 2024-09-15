@@ -1,34 +1,48 @@
 import { faHeart as faHeartEmpty } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { FaRegCommentDots } from "react-icons/fa";
+import postService from "../../services/postService";
 import css from "./post.module.css";
+import { usePostContext } from "./PostContext";
 
-type PostFooterProps = {
-  isPostLiked: boolean;
-  likesSum: number;
-  commentsSum: number;
-  onAddLike: () => void;
-  onRemoveLike: () => void;
-  onClickComments: () => void;
-};
+export default function PostFooter() {
+  const { post, openComments } = usePostContext();
+  const [likes, setLikes] = useState<number>(post.likeCount);
+  const [isLiked, setIsLiked] = useState<boolean>(post.isLiked);
 
-export default function PostFooter(props: PostFooterProps) {
-  const { isPostLiked, likesSum, commentsSum, onAddLike, onRemoveLike, onClickComments } = props;
+  const addLike = () => {
+    postService.addLikeToPost(post.id).catch(() => {
+      setIsLiked(false);
+    });
+
+    setIsLiked(true);
+    setLikes((prev) => prev + 1);
+  };
+
+  const removeLike = () => {
+    postService.removeLikeFromPost(post.id).catch(() => {
+      setIsLiked(true);
+    });
+
+    setIsLiked(false);
+    setLikes((prev) => prev - 1);
+  };
 
   return (
     <div className={css["post__footer"]}>
       <div className={css["footer__like"]}>
-        {isPostLiked ? (
-          <FontAwesomeIcon icon={faHeartFilled} size="xl" onClick={onRemoveLike} className={`${css["like__filled-icon"]}`} />
+        {isLiked ? (
+          <FontAwesomeIcon icon={faHeartFilled} size="xl" onClick={removeLike} className={`${css["like__filled-icon"]}`} />
         ) : (
-          <FontAwesomeIcon icon={faHeartEmpty} size="xl" onClick={onAddLike} className={css["like__empty-icon"]} />
+          <FontAwesomeIcon icon={faHeartEmpty} size="xl" onClick={addLike} className={css["like__empty-icon"]} />
         )}
-        <div className={css["like__count"]}>{likesSum}</div>
+        <div className={css["like__count"]}>{likes}</div>
       </div>
-      <div className={css["footer__comment"]} onClick={onClickComments}>
+      <div className={css["footer__comment"]} onClick={openComments}>
         <FaRegCommentDots size={25} />
-        {commentsSum}
+        {post.commentCount}
       </div>
     </div>
   );

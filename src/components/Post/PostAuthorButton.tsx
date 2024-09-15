@@ -1,17 +1,13 @@
 import Dropdown from "../dropdown/Dropdown";
+import { usePostContext } from "./PostContext";
 
-type PostAuthorButtonProps = {
-  onEdit: () => void;
-  onDelete: () => void;
-};
-
-export default function PostAuthorButton(props: PostAuthorButtonProps) {
-  const { onEdit, onDelete } = props;
+export default function PostAuthorButton() {
+  const { editPost, deletePost } = usePostContext();
   return (
     <Dropdown>
       <>
-        <div onClick={onEdit}>Edit</div>
-        <div onClick={onDelete} style={{ color: "red" }}>
+        <div onClick={editPost}>Edit</div>
+        <div onClick={deletePost} style={{ color: "red" }}>
           Delete
         </div>
       </>
