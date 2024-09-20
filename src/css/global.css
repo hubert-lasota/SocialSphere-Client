@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 :root {
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
   --inner-border-color: #f1f1f1;
   --inner-background-color: #f5f5f5;
   --outer-background-color: #fff;
@@ -12,6 +22,114 @@
   --danger-color: red;
 }
 
+.profile-picture {
+  border-radius: 50%;
+  max-width: 3.5rem;
+  max-height: 3.5rem;
+}
+
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+
+.row-gap-small {
+  row-gap: 0.7rem;
+}
+
+.column-gap-large {
+  column-gap: 1.3rem;
+}
+
+.column-gap-small {
+  column-gap: 0.7rem;
+}
+
+.column-gap-xs {
+  column-gap: 0.4rem;
+}
+
 .padding-medium {
   padding: 1rem;
+}
+
+.margin-left-small {
+  margin-left: 0.7rem;
+}
+
+.margin-top-small {
+  margin-top: 0.7rem;
+}
+
+.border-radius-small {
+  border-radius: 6px;
+}
+
+.bg-color-primary {
+  background-color: var(--primary-color);
+}
+
+.bg-color-primary-on-hover:hover {
+  background-color: var(--primary-color);
+}
+
+.font-color-primary {
+  color: var(--primary-font-color);
+}
+
+.font-color-white {
+  color: #fff;
+}
+
+.font-color-white-on-hover:hover {
+  color: #fff;
+}
+
+.transition-bg-color:hover {
+  transition: background-color linear 0.2s;
+}
+
+
+img {
+  display: block;
+}
+
+input,
+button,
+textarea {
+  font-family: "Jost", sans-serif;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+
+input {
+  appearance: none;
+}
+
+textarea {
+  overflow: auto;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  resize: none;
+}
+
+select {
+  appearance: none;
+  border: none;
+  outline: none;
 }

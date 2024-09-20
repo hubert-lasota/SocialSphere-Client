@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../../components/button/Button";
 import FileUploader from "../../components/file_uploader/FileUploader";
-import { usePostContext } from "../../contexts/PostContext";
+import { useManagePostsContext } from "../../contexts/ManagePostsContext";
 import "../../css/global.css";
 import useFetchCurrentUserProfilePicture from "../../hooks/useFetchCurrentUserProfilePicture";
 import { PostRequest } from "../../types/post.types";
@@ -15,7 +15,7 @@ type AddPostModalProps = {
 
 export default function AddPostModal(props: AddPostModalProps) {
   const { onCloseModal, onRejectAddPost } = props;
-  const { onAddPost } = usePostContext();
+  const { onAddPost } = useManagePostsContext();
   const { picture } = useFetchCurrentUserProfilePicture();
 
   const [images, setImages] = useState<File[]>([]);
