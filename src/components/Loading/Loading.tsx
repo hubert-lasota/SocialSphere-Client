@@ -1,11 +1,13 @@
+import { CSSProperties } from "react";
 import "./loading.css"
 
 type LoadingProps = {
   pageLoading?: boolean
+  additionalStyle?: CSSProperties
 };
 
 export default function Loading(props: LoadingProps) {
-  const { pageLoading = false } = props;
+  const { pageLoading = false, additionalStyle } = props;
 
   let className; 
 
@@ -15,5 +17,5 @@ export default function Loading(props: LoadingProps) {
     className = "small-loader"
   }
 
-  return <div className={className}></div>;
+  return <div className={className} style={additionalStyle}></div>;
 }

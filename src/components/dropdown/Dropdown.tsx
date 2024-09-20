@@ -1,18 +1,21 @@
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import useFetchCurrentUserProfilePicture from "../../hooks/useFetchCurrentUserProfilePicture";
+import Loading from "../loading/Loading";
 import css from "./dropdown.module.css";
 
 type DropdownProps = {
-  children: React.ReactNode;
-  type?: "three-dots" | "text" | "img";
-  text?: string;
-  imgSrc?: string;
+  header: ReactNode;
+  children: ReactNode;
   additionalClassName?: string;
+  additionalStyle?: CSSProperties;
+  additionalHeaderContainerStyle?: CSSProperties;
+  additionalMenuContainerStyle?: CSSProperties;
 };
 
 export default function Dropdown(props: DropdownProps) {
-  const { children, type = "three-dots", text, imgSrc, additionalClassName } = props;
+  const { header, children, additionalClassName, additionalStyle, additionalHeaderContainerStyle, additionalMenuContainerStyle } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,17 +56,29 @@ export default function Dropdown(props: DropdownProps) {
   };
 
   return (
-    <div ref={dropdownRef} className={css["dropdown"] + " " + additionalClassName}>
-      <div className={css["dropdown__menu-btn"]} onClick={clickDropdown}>
-        {type === "three-dots" && <FontAwesomeIcon icon={faEllipsis} className={css["dropdown-icon"]} />}
-        {type === "text" && <div>{text}</div>}
-        {type === "img" && <img src={imgSrc} />}
+    <div ref={dropdownRef} style={additionalStyle} className={css["dropdown"] + " " + additionalClassName}>
+      <div className={css["dropdown__menu-btn"]} style={additionalHeaderContainerStyle} onClick={clickDropdown}>
+        {header}
       </div>
       {isOpen && (
-        <div ref={menuRef} className={css["menu"]}>
+        <div ref={menuRef} style={additionalMenuContainerStyle} className={css["menu"]}>
           {children}
         </div>
       )}
     </div>
   );
 }
+
+Dropdown.HeaderThreeDots = function DropdownHeaderThreeDots() {
+  return <FontAwesomeIcon icon={faEllipsis} className={css["dropdown-icon"]} />;
+};
+
+Dropdown.HeaderUserProfileImg = function DropdownHeaderUserProfileImg() {
+  const { picture, loading } = useFetchCurrentUserProfilePicture();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  return <img src={picture} className="profile-picture" alt="profile" />;
+};

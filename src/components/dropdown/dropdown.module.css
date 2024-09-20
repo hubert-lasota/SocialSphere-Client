@@ -17,7 +17,7 @@
   background-color: var(--outer-background-color);
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 1.9rem;
+  top: 4.1rem;
   right: 0;
   left: 50%;
   transform: translateX(-50%);
@@ -28,6 +28,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  row-gap: 0.4rem;
 }
 
 .menu > * {
