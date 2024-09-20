@@ -32,7 +32,7 @@ export default function useFetchPostComments(postId: number) {
 
   useEffect(() => {
     fetchComments(page.current, true);
-  }, []);
+  }, [postId]);
 
   const fetchNextCommentPage = () => {
     if (isLastPage) return;

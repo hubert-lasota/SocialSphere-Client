@@ -42,8 +42,6 @@
 
 /* CONTENT */
 
-.post__content {
-}
 
 .post__content-editable {
   border-radius: 6px;
@@ -135,8 +133,6 @@
 .footer__comment {
   padding: 0.2rem 2.5rem;
   border-radius: 10rem;
-  background-color: var(--primary-color);
-  color: var(--primary-font-color);
   cursor: pointer;
   user-select: none;
   margin-left: 13rem;
@@ -144,6 +140,10 @@
   justify-content: center;
   align-items: center;
   column-gap: 10px;
+}
+
+.footer__comment:hover {
+  background-color: var(--inner-border-color);
 }
 
 

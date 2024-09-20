@@ -8,7 +8,7 @@ type PostCommentAuthorButtonProps = {
 export default function PostCommentAuthorButton(props: PostCommentAuthorButtonProps) {
   const { onEdit, onDelete } = props;
   return (
-    <Dropdown>
+    <Dropdown header={<Dropdown.HeaderThreeDots />} additionalMenuContainerStyle={{top: "1.9rem"}}>
       <>
         <div onClick={onEdit}>Edit</div>
         <div onClick={onDelete} style={{ color: "red" }}>

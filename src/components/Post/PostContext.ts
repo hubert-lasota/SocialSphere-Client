@@ -4,7 +4,7 @@ import { Post } from "../../types/post.types";
 type PostContextValue = {
   post: Post
   openComments: () => void
-  editPost: (content: string) => void
+  editPost: () => void
   cancelUpdatePost: () => void
   updatePost: () => void
   deletePost: () => void
