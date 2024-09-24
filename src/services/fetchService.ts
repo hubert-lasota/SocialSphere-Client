@@ -1,3 +1,5 @@
+import getJwtHeaderFromLocalStorage from "../utils/getJwtHeaderFromLocalStorage";
+
 interface FetchService {
   get: (url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
   post: (url: string, body: any | FormData, params?: UrlParameter[], headers?: [string, string][], responseFormat?: ResponseFormat) => Promise<any>;
@@ -18,7 +20,10 @@ export enum ResponseFormat {
   ARRAYBUFFER,
 }
 
-function get(url: string, params?: UrlParameter[], headers?: [string, string][], responseFormat: ResponseFormat = ResponseFormat.JSON): Promise<any> {
+const APPLICATION_JSON_HEADER: [string, string] = ["Content-Type", "application/json"];
+const JWT_HEADER: [string, string] = getJwtHeaderFromLocalStorage();
+
+function get(url: string, params?: UrlParameter[], headers = [JWT_HEADER], responseFormat: ResponseFormat = ResponseFormat.JSON): Promise<any> {
   const urlParams: string = params ? extractUrlParams(params) : "";
   const finalUrl = url + urlParams;
   const finalHeaders = headers ? new Headers(headers) : new Headers();
@@ -31,7 +36,7 @@ function post(
   url: string,
   body: any | FormData,
   params?: UrlParameter[],
-  headers?: [string, string][],
+  headers = [JWT_HEADER, APPLICATION_JSON_HEADER],
   responseFormat: ResponseFormat = ResponseFormat.JSON
 ): Promise<any> {
   const urlParams: string = params ? extractUrlParams(params) : "";
@@ -51,7 +56,7 @@ function put(
   url: string,
   body: any | FormData,
   params?: UrlParameter[],
-  headers?: [string, string][],
+  headers = [JWT_HEADER, APPLICATION_JSON_HEADER],
   responseFormat: ResponseFormat = ResponseFormat.JSON
 ) {
   const urlParams: string = params ? extractUrlParams(params) : "";
@@ -73,7 +78,7 @@ function patch(
   url: string,
   body: any | FormData,
   params?: UrlParameter[],
-  headers?: [string, string][],
+  headers = [JWT_HEADER, APPLICATION_JSON_HEADER],
   responseFormat: ResponseFormat = ResponseFormat.JSON
 ) {
   const urlParams: string = params ? extractUrlParams(params) : "";
@@ -94,7 +99,7 @@ function patch(
 function deleteRequest(
   url: string,
   params?: UrlParameter[],
-  headers?: [string, string][],
+  headers = [JWT_HEADER],
   responseFormat: ResponseFormat = ResponseFormat.JSON
 ): Promise<any> {
   const urlParams: string = params ? extractUrlParams(params) : "";

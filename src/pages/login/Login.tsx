@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import LoginForm from "./LoginForm";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import authService from "../../services/authService";
 import { LoginResponse } from "../../types/auth.types";
+import { DataResult } from "../../types/common.types";
 import css from "./login.module.css";
+import LoginForm from "./LoginForm";
 
 export default function Login() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -14,13 +15,13 @@ export default function Login() {
   const [isWarning, setIsWarning] = useState(false);
 
   async function handleSignIn(username: string, password: string) {
-    const response: LoginResponse = await authService.login({
+    const response: DataResult<LoginResponse> = await authService.login({
       username: username,
       password: password,
     });
 
-    if (response.success) {
-      const { userId, username, jwt } = response.login;
+    if (response?.success) {
+      const { userId, username, jwt } = response.data;
       setUserIdItem(userId);
       setUsernameItem(username);
       setJwtItem(jwt);
@@ -38,9 +39,7 @@ export default function Login() {
           <p>Register with username and password</p>
           <p>to be able to use Social Sphere</p>
         </div>
-        <button className={`${css["sign-up__btn"]}`}>
-          SIGN UP
-        </button>
+        <button className={`${css["sign-up__btn"]}`}>SIGN UP</button>
       </div>
 
       <LoginForm isWarning={isWarning} handleSignIn={handleSignIn} />

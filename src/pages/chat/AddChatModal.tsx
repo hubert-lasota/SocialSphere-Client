@@ -41,14 +41,13 @@ export default function AddChatModal(props: AddChatModalProps) {
             <div className="flex column-gap-small align-items-center" onClick={() => onAddChat(friend.user.id)}>
               <img src={getUserProfileImgSrc(profile.profilePicture)} className="profile-picture" />
               <div>
-                <span>{profile.firstName}</span>
+                <span>{profile.firstName + " "} </span>
                 <span>{profile.lastName}</span>
               </div>
             </div>
           );
         })}
       </div>
-      ;
     </div>
   );
 }

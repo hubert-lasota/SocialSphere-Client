@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { CSSProperties, useRef, useState } from "react";
 import { useManagePostsContext } from "../../contexts/ManagePostsContext";
 import useIsCurrentUser from "../../hooks/useIsCurrentUser";
 import { Post as IPost } from "../../types/post.types";
@@ -11,6 +11,7 @@ import PostHeader from "./PostHeader";
 
 type PostProps = {
   post: IPost;
+  additionalStyle?: CSSProperties
 };
 
 export default function Post(props: PostProps) {
@@ -70,7 +71,7 @@ export default function Post(props: PostProps) {
         updatePost: handleUpdatePost,
       }}
     >
-      <div className={css["post"]}>
+      <div className={css["post"]} style={props.additionalStyle}>
         <PostHeader isPostAuthorButtonShown={isPostAuthorBtnShown.current} />
         <PostContent isEditModeOn={isEditModeOn} />
         <PostFooter />

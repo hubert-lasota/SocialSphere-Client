@@ -20,6 +20,6 @@ function validateUserToken(userToken: LoginTokenRequest): Promise<DataResult<Log
   return fetchService.post(finalUrl, userToken, undefined, [APPLICATION_JSON_HEADER]) as Promise<DataResult<LoginResponse>>;
 }
 
-const authService: AuthService = { login: login, validateUserToken: validateUserToken };
+const authService: AuthService = { login, validateUserToken };
 
 export default authService;

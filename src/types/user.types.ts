@@ -44,8 +44,9 @@ export interface Friend {
 }
 
 export interface FriendRequestResponse {
-  senderId: number;
-  receiverId: number;
+  id: number;
+  sender: UserHeader;
   status: FriendRequestStatus;
 }
+
 export type FriendRequestStatus = "ACCEPTED" | "REJECTED" | "WAITING_FOR_RESPONSE";

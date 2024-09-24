@@ -24,7 +24,7 @@ export default function AddPost() {
     <>
       <div className={css["add-post"]} onClick={handleOpenModal}>
         <div className={css["add-post__left-side"]}>
-          <img src={picture} alt="profile" className={css["add-post__left-side__profile"]} />
+          <img src={picture} alt="profile" className="profile-picture" />
         </div>
         <div className={css["add-post__right-side"]}>Whats on your mind today?</div>
       </div>

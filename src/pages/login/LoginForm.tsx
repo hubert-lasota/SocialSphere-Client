@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import UsernameInput from "../../components/input/UsernameInput/UsernameInput";
-import PasswordInput from "../../components/input/PasswordInput/PasswordInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import CredentialInput from "./CredentialInput";
 import css from "./login.module.css";
-import SubmitButton from "../../components/button/SubmitButton";
 
 type LoginFormProps = {
   isWarning: boolean;
@@ -32,32 +30,16 @@ export default function LoginForm(props: LoginFormProps) {
         handleSignIn(username, password);
       }}
     >
-      <div
-        className={`${css["sign-in__header"]}`}
-      >
-        Sign in!
-      </div>
-      <UsernameInput
-        username={username}
-        handleChangeUsername={handleChangeUsername}
-      />
-      <PasswordInput
-        password={password}
-        placeholder="Password"
-        handleChangePassword={handleChangePassword}
-      />
-      <SubmitButton text="SIGN IN" />
+      <div className={`${css["sign-in__header"]}`}>Sign in!</div>
+      <CredentialInput type="username" inputValue={username} onChangeInputValue={handleChangeUsername} />
+      <CredentialInput type="password" inputValue={password} onChangeInputValue={handleChangePassword} />
+
+      <button className={css["sign-in__btn"]}>SIGN IN</button>
 
       {isWarning ? (
         <div className={css["sign-in__warning"]}>
-          <FontAwesomeIcon
-            icon={faCircleExclamation}
-            className={`${css["warning__icon"]}`}
-            size="2x"
-          />
-          <span className={`${css["warning__text"]}`}>
-            Invalid credentials. Try again!
-          </span>
+          <FontAwesomeIcon icon={faCircleExclamation} className={`${css["warning__icon"]}`} size="2x" />
+          <span className={`${css["warning__text"]}`}>Invalid credentials. Try again!</span>
         </div>
       ) : (
         <></>

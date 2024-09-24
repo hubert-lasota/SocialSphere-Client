@@ -1,50 +1,67 @@
 import { DataResult, Page } from "../types/common.types";
 import { Friend, FriendRequestResponse, UserHeader, UserProfile, UserProfileConfig, UserWrapper } from "../types/user.types";
-import getJwtHeaderFromLocalStorage from "../utils/getJwtHeaderFromLocalStorage";
 import fetchService, { UrlParameter } from "./fetchService";
 
 interface UserService {
   sendFriendRequest: (receiverId: number) => Promise<DataResult<FriendRequestResponse>>;
+  acceptFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
+  rejectFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
   getLoggedInUserProfilePicutre: () => Promise<DataResult<string>>;
   getLoggedInUser: () => Promise<DataResult<UserWrapper>>;
-  getLoggedInUserHeader: () => Promise<DataResult<UserHeader>>
+  getLoggedInUserHeader: () => Promise<DataResult<UserHeader>>;
   searchUsers: (containsString: string, size: number) => Promise<DataResult<UserHeader[]>>;
   findMyFriends: (page: number, size: number) => Promise<DataResult<Page<Friend>>>;
-  findMyFriendsWithNoSharedChats: () => Promise<DataResult<Friend[]>>
+  findMyFriendsWithNoSharedChats: () => Promise<DataResult<Friend[]>>;
   findUserFriends: (userId: number, page: number, size: number) => Promise<DataResult<Page<Friend>>>;
   findUser: (userId: number) => Promise<DataResult<UserWrapper>>;
+  findCurrentUserFriendNotifications: () => Promise<DataResult<FriendRequestResponse[]>>;
   updateUserProfile: (userProfile: UserProfile) => Promise<DataResult<UserProfile>>;
   updateUserProfileConfig: (useProfileConfig: UserProfileConfig) => Promise<DataResult<UserProfileConfig>>;
   removeFriendFromFriendList: (friendId: number) => Promise<DataResult<any>>;
 }
 
 const URL = "http://localhost:8080/api/v1/user";
-const APPLICATION_JSON_HEADER: [string, string] = ["Content-Type", "application/json"];
-const JWT_HEADER: [string, string] = getJwtHeaderFromLocalStorage();
+
+function acceptFriendRequest(friendRequestId: number) {
+  const finalUrl = URL + "/friend/accept";
+  const params: UrlParameter[] = [{ key: "friendRequestId", value: friendRequestId.toString() }];
+
+  return fetchService.patch(finalUrl, undefined, params);
+}
+
+function rejectFriendRequest(friendRequestId: number) {
+  const finalUrl = URL + "/friend/reject";
+  const params: UrlParameter[] = [{ key: "friendRequestId", value: friendRequestId.toString() }];
+
+  return fetchService.patch(finalUrl, undefined, params);
+}
 
 function sendFriendRequest(receiverId: number): Promise<DataResult<FriendRequestResponse>> {
   const finalUrl = URL + "/friend/send";
   const body = { receiverId: receiverId.toString() };
 
-  return fetchService.post(finalUrl, body, undefined, [JWT_HEADER, APPLICATION_JSON_HEADER]) as Promise<DataResult<FriendRequestResponse>>;
+  return fetchService.post(finalUrl, body) as Promise<DataResult<FriendRequestResponse>>;
 }
 
 function getLoggedInUserProfilePicutre(): Promise<DataResult<string>> {
   const finalUrl = URL + "/profile/picture";
 
-  return fetchService.get(finalUrl, undefined, [JWT_HEADER]);
+  return fetchService.get(finalUrl);
 }
 
 function getLoggedInUser(): Promise<DataResult<UserWrapper>> {
-  return fetchService.get(URL, undefined, [JWT_HEADER]) as Promise<DataResult<UserWrapper>>;
+  return fetchService.get(URL) as Promise<DataResult<UserWrapper>>;
 }
 
 function getLoggedInUserHeader() {
-  const params: UrlParameter[] = [{
-    key: "header", value: "true"
-  }]
+  const params: UrlParameter[] = [
+    {
+      key: "header",
+      value: "true",
+    },
+  ];
 
-  return fetchService.get(URL, params, [JWT_HEADER]) as Promise<DataResult<UserHeader>>;
+  return fetchService.get(URL, params) as Promise<DataResult<UserHeader>>;
 }
 
 function searchUsers(containsString: string, size: number): Promise<DataResult<UserHeader[]>> {
@@ -53,7 +70,7 @@ function searchUsers(containsString: string, size: number): Promise<DataResult<U
     { key: "size", value: size.toString() },
   ];
   const finalUrl = URL + "/search";
-  return fetchService.get(finalUrl, urlParams, [JWT_HEADER]) as Promise<DataResult<UserHeader[]>>;
+  return fetchService.get(finalUrl, urlParams) as Promise<DataResult<UserHeader[]>>;
 }
 
 function findMyFriends(page: number, size: number): Promise<DataResult<Page<Friend>>> {
@@ -62,16 +79,14 @@ function findMyFriends(page: number, size: number): Promise<DataResult<Page<Frie
     { key: "page", value: page.toString() },
     { key: "size", value: size.toString() },
   ];
-  return fetchService.get(finalUrl, urlParams, [JWT_HEADER]) as Promise<DataResult<Page<Friend>>>;
+  return fetchService.get(finalUrl, urlParams) as Promise<DataResult<Page<Friend>>>;
 }
 
 function findMyFriendsWithNoSharedChats() {
   const finalUrl = URL + "/friend";
-  const urlParams: UrlParameter[] = [
-    { key: "noSharedChat", value: "true"}
-  ]
+  const urlParams: UrlParameter[] = [{ key: "noSharedChat", value: "true" }];
 
-  return fetchService.get(finalUrl, urlParams, [JWT_HEADER]);
+  return fetchService.get(finalUrl, urlParams);
 }
 
 function findUserFriends(userId: number, page: number, size: number): Promise<DataResult<Page<Friend>>> {
@@ -81,13 +96,19 @@ function findUserFriends(userId: number, page: number, size: number): Promise<Da
     { key: "page", value: page.toString() },
     { key: "size", value: size.toString() },
   ];
-  return fetchService.get(finalUrl, urlParams, [JWT_HEADER]) as Promise<DataResult<Page<Friend>>>;
+  return fetchService.get(finalUrl, urlParams) as Promise<DataResult<Page<Friend>>>;
 }
 
 function findUser(userId: number): Promise<DataResult<UserWrapper>> {
   const finalUrl = URL + `/${userId}`;
 
-  return fetchService.get(finalUrl, undefined, [JWT_HEADER, APPLICATION_JSON_HEADER]) as Promise<DataResult<UserWrapper>>;
+  return fetchService.get(finalUrl, undefined) as Promise<DataResult<UserWrapper>>;
+}
+
+function findCurrentUserFriendNotifications() {
+  const finalUrl = URL + "/friend/notification";
+
+  return fetchService.get(finalUrl);
 }
 
 function updateUserProfile(userProfile: UserProfile): Promise<DataResult<UserProfile>> {
@@ -104,35 +125,38 @@ function updateUserProfile(userProfile: UserProfile): Promise<DataResult<UserPro
   const requestBlob = new Blob([JSON.stringify(userProfileRequest)], { type: "application/json" });
   formData.append("request", requestBlob);
 
-  return fetchService.put(finalUrl, formData, undefined, [JWT_HEADER]) as Promise<DataResult<UserProfile>>;
+  return fetchService.put(finalUrl, formData) as Promise<DataResult<UserProfile>>;
 }
 
 function updateUserProfileConfig(userProfileConfig: UserProfileConfig): Promise<DataResult<UserProfileConfig>> {
   const finalUrl = URL + "/profile/config";
 
-  return fetchService.put(finalUrl, userProfileConfig, undefined, [APPLICATION_JSON_HEADER, JWT_HEADER]) as Promise<DataResult<UserProfileConfig>>;
+  return fetchService.put(finalUrl, userProfileConfig) as Promise<DataResult<UserProfileConfig>>;
 }
 
 function removeFriendFromFriendList(friendId: number): Promise<DataResult<any>> {
   const finalUrl = URL + "/friend/remove";
   const urlParams: UrlParameter[] = [{ key: "friendId", value: friendId.toString() }];
 
-  return fetchService.deleteRequest(finalUrl, urlParams, [JWT_HEADER]);
+  return fetchService.deleteRequest(finalUrl, urlParams);
 }
 
 const userService: UserService = {
-  sendFriendRequest: sendFriendRequest,
-  getLoggedInUserProfilePicutre: getLoggedInUserProfilePicutre,
-  getLoggedInUserHeader: getLoggedInUserHeader,
-  searchUsers: searchUsers,
-  findMyFriends: findMyFriends,
+  acceptFriendRequest,
+  rejectFriendRequest,
+  sendFriendRequest,
+  getLoggedInUserProfilePicutre,
+  getLoggedInUserHeader,
+  searchUsers,
+  findMyFriends,
   findMyFriendsWithNoSharedChats,
-  findUserFriends: findUserFriends,
-  findUser: findUser,
-  getLoggedInUser: getLoggedInUser,
-  updateUserProfile: updateUserProfile,
-  updateUserProfileConfig: updateUserProfileConfig,
-  removeFriendFromFriendList: removeFriendFromFriendList,
+  findUserFriends,
+  findUser,
+  findCurrentUserFriendNotifications,
+  getLoggedInUser,
+  updateUserProfile,
+  updateUserProfileConfig,
+  removeFriendFromFriendList,
 };
 
 export default userService;

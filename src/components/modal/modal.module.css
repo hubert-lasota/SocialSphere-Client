@@ -9,10 +9,12 @@
 }
 
 .modal {
+  max-height: 90vh;
+  overflow-y: auto;
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 1000;
+  z-index: 100005;
   animation: top-to-bottom 0.5s linear forwards;
 }
 

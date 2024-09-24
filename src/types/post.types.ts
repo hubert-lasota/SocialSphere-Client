@@ -1,5 +1,5 @@
 import { FileDetails } from "./common.types";
-import { UserProfile } from "./user.types";
+import { UserHeader, UserProfile } from "./user.types";
 
 export interface Post {
   id: number;
@@ -33,3 +33,15 @@ export interface PostLike {
   postId: number;
   userId: number;
 }
+
+export interface PostNotification {
+  id: number;
+  updatedPost: Post
+  updateType: PostNotificationType
+  updatedBy: UserHeader
+  updatedAt: string
+  checked: boolean;
+}
+
+
+export type PostNotificationType = "LIKE" | "COMMENT"
