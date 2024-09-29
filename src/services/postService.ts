@@ -1,12 +1,13 @@
 import { DataResult, Page } from "../types/common.types";
 import { Post, PostComment, PostLike, PostNotification, PostRequest } from "../types/post.types";
+import getFromLocalStorage from "../utils/getFromLocalStorage";
 import fetchService, { UrlParameter } from "./fetchService";
 
 interface PostService {
   addLikeToPost: (postId: number) => Promise<DataResult<PostLike>>;
   createPost: (request: PostRequest) => Promise<DataResult<Post>>;
   createPostComment: (postId: number, content: string) => Promise<DataResult<PostComment>>;
-  findUserPostPage: (page: number, size: number, userId?: string) => Promise<DataResult<Page<Post>>>;
+  findUserPostPage: (page: number, size: number, userId: number) => Promise<DataResult<Page<Post>>>;
   findPostPageForCurrentUser: (page: number, size: number) => Promise<DataResult<Page<Post>>>;
   findPostCommentPage: (postId: number, page: number, size: number) => Promise<DataResult<Page<PostComment>>>;
   findPostNotifications: () => Promise<DataResult<PostNotification[]>>;
@@ -49,14 +50,15 @@ function createPostComment(postId: number, content: string): Promise<DataResult<
   return fetchService.post(finalUrl, body) as Promise<DataResult<PostComment>>;
 }
 
-function findUserPostPage(page: number, size: number, userId?: string): Promise<DataResult<Page<Post>>> {
+function findUserPostPage(page: number, size: number, userId: number): Promise<DataResult<Page<Post>>> {
   const urlParams: UrlParameter[] = [
     { key: "page", value: page.toString() },
     { key: "size", value: size.toString() },
   ];
 
-  if (userId) {
-    urlParams.push({ key: "userId", value: userId });
+  const currentUserId = parseInt(getFromLocalStorage("user_id"));
+  if (currentUserId !== userId) {
+    urlParams.push({ key: "userId", value: userId.toString() });
   }
 
   return fetchService.get(URL, urlParams) as Promise<DataResult<Page<Post>>>;

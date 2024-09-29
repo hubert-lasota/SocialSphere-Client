@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading/Loading";
 import userService from "../../services/userService";
-import { Friend } from "../../types/user.types";
+import { UserWithProfile } from "../../types/user.types";
 import getUserProfileImgSrc from "../../utils/getUserProfileImgSrc";
 import css from "./chat.module.css";
 
@@ -11,7 +11,7 @@ type AddChatModalProps = {
 
 export default function AddChatModal(props: AddChatModalProps) {
   const { onAddChat } = props;
-  const [friends, setFriends] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<UserWithProfile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

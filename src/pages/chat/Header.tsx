@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { AiFillHome } from "react-icons/ai";
 import { RiChatNewLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import HomeNavigateButton from "../../components/HomeNavigateButton";
 import Modal from "../../components/modal/Modal";
 import AddChatModal from "./AddChatModal";
 import css from "./chat.module.css";
@@ -9,7 +8,6 @@ import { useChatContext } from "./ChatContext";
 
 export default function Header() {
   const { addChat } = useChatContext();
-  const navigate = useNavigate();
   const [isAddChatModalOpen, setIsAddChatModalOpen] = useState<boolean>(false);
 
   const handleAddChat = (receiverId: number) => {
@@ -24,9 +22,7 @@ export default function Header() {
           <div className={css["header__add-chat-btn"]} onClick={() => setIsAddChatModalOpen(true)}>
             <RiChatNewLine />
           </div>
-          <div className={css["header__home-btn"]} onClick={() => navigate("/home")}>
-            <AiFillHome />
-          </div>
+          <HomeNavigateButton additionalClassName={css["header__home-btn"]} />
         </div>
       </header>
       <Modal open={isAddChatModalOpen} onClose={() => setIsAddChatModalOpen(false)}>

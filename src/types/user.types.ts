@@ -9,7 +9,7 @@ export interface UserHeader {
 export interface UserWrapper {
   user: User;
   userProfile: UserProfile;
-  userProfileConfig: UserProfileConfig
+  userProfileConfig: UserProfileConfig;
 }
 
 export interface User {
@@ -38,7 +38,7 @@ export enum ProfilePrivacyLevel {
   FRIENDS = "FRIENDS",
 }
 
-export interface Friend {
+export interface UserWithProfile {
   user: User;
   userProfile: UserProfile;
 }
