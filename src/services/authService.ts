@@ -7,6 +7,7 @@ const APPLICATION_JSON_HEADER: [string, string] = ["Content-Type", "application/
 
 interface AuthService {
   login: (credentials: LoginRequest) => Promise<DataResult<LoginResponse>>;
+  createLogin: (credentials: LoginRequest) => Promise<DataResult<LoginResponse>>;
   validateUserToken: (userToken: LoginTokenRequest) => Promise<DataResult<LoginResponse>>;
 }
 
@@ -20,6 +21,12 @@ function validateUserToken(userToken: LoginTokenRequest): Promise<DataResult<Log
   return fetchService.post(finalUrl, userToken, undefined, [APPLICATION_JSON_HEADER]) as Promise<DataResult<LoginResponse>>;
 }
 
-const authService: AuthService = { login, validateUserToken };
+function createLogin(credentials: LoginRequest) {
+  const finalUrl: string = URL + "/create";
+
+  return fetchService.post(finalUrl, credentials, undefined, [APPLICATION_JSON_HEADER]);
+}
+
+const authService: AuthService = { login, createLogin, validateUserToken };
 
 export default authService;

@@ -20,6 +20,13 @@ export interface User {
 
 export type RelationshipStatus = "YOU" | "FRIEND" | "STRANGER";
 
+export interface UserProfileRequest {
+  firstName: string;
+  lastName: string;
+  city: string;
+  country: string;
+}
+
 export interface UserProfile {
   firstName: string;
   lastName: string;

@@ -1,10 +1,20 @@
 import { DataResult, Page } from "../types/common.types";
-import { FriendRequestResponse, UserHeader, UserProfile, UserProfileConfig, UserWithProfile, UserWrapper } from "../types/user.types";
+import {
+  FriendRequestResponse,
+  UserHeader,
+  UserProfile,
+  UserProfileConfig,
+  UserProfileRequest,
+  UserWithProfile,
+  UserWrapper,
+} from "../types/user.types";
 import base64ToUint8Array from "../utils/base64ToUint8Array";
 import getJwtHeaderFromLocalStorage from "../utils/getJwtHeaderFromLocalStorage";
 import fetchService, { UrlParameter } from "./fetchService";
 
 interface UserService {
+  createProfile: (userProfileRequest: UserProfileRequest, profilePicture: File | null) => Promise<DataResult<UserProfile>>;
+  createProfileConfig: (UserProfileConfig: UserProfileConfig) => Promise<DataResult<UserProfileConfig>>;
   sendFriendRequest: (receiverId: number) => Promise<DataResult<FriendRequestResponse>>;
   acceptFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
   rejectFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
@@ -28,6 +38,25 @@ interface UserService {
 
 const URL = "http://localhost:8080/api/v1/user";
 const JWT_HEADER: [string, string] = getJwtHeaderFromLocalStorage();
+
+function createProfile(userProfileRequest: UserProfileRequest, profilePicture: File | null) {
+  const formData = new FormData();
+  if (profilePicture) {
+    formData.append("profilePicture", profilePicture, profilePicture.name);
+  }
+
+  const requestBlob = new Blob([JSON.stringify(userProfileRequest)], { type: "application/json" });
+  formData.append("request", requestBlob);
+
+  const finalUrl = URL + "/profile";
+  return fetchService.post(finalUrl, formData, undefined, [JWT_HEADER]);
+}
+
+function createProfileConfig(userProfileConfig: UserProfileConfig) {
+  const finalUrl = URL + "/profile/config";
+
+  return fetchService.post(finalUrl, userProfileConfig);
+}
 
 function acceptFriendRequest(friendRequestId: number) {
   const finalUrl = URL + "/friend/accept";
@@ -178,6 +207,8 @@ function isUserWaitingForCurrentUserFriendResponse(userId: number) {
 }
 
 const userService: UserService = {
+  createProfile,
+  createProfileConfig,
   acceptFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,

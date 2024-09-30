@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { AiFillFileImage } from "react-icons/ai";
 import { MdCloudUpload, MdDelete } from "react-icons/md";
 import "../../css/global.css";
@@ -17,12 +17,21 @@ type FileUploaderProps = {
   addFileMessage?: string;
   maxFiles?: number;
   acceptFileType?: string;
+  additionalStyle?: CSSProperties;
 };
 
 const DEFAULT_ADD_FILE_MESSAGE = "Browse Files to upload";
 
 export default function FileUploader(props: FileUploaderProps) {
-  const { onFilesUpload, onFileRemove, maxFiles = 10, acceptFileType = "image/*", addFileMessage = DEFAULT_ADD_FILE_MESSAGE, initialFiles } = props;
+  const {
+    onFilesUpload,
+    onFileRemove,
+    maxFiles = 10,
+    acceptFileType = "image/*",
+    addFileMessage = DEFAULT_ADD_FILE_MESSAGE,
+    initialFiles,
+    additionalStyle,
+  } = props;
   const [images, setImages] = useState<Image[]>([]);
   const [index, setIndex] = useState<number>(-1);
 
@@ -71,7 +80,7 @@ export default function FileUploader(props: FileUploaderProps) {
   };
 
   return (
-    <div className={css["file-uploader-wrapper"]}>
+    <div className={css["file-uploader-wrapper"]} style={additionalStyle}>
       <div className={css["file-uploader"]} onClick={() => click()}>
         <input id="file-uploade-input" type="file" multiple max={maxFiles} accept={acceptFileType} hidden onChange={(e) => uploadFile(e)} />
         {images && images.length > 0 ? (
@@ -89,7 +98,8 @@ export default function FileUploader(props: FileUploaderProps) {
           images.map((img) => {
             return (
               <p className={css["uploaded-row"]} key={img.index}>
-                <span className={css["switch-file"]}
+                <span
+                  className={css["switch-file"]}
                   onClick={() => {
                     setIndex(img.index);
                   }}

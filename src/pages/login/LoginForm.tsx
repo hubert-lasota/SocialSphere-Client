@@ -1,7 +1,7 @@
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import CredentialInput from "./CredentialInput";
+import CredentialInput from "../../components/input/credential_input/CredentialInput";
 import css from "./login.module.css";
 
 type LoginFormProps = {

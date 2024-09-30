@@ -7,13 +7,17 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/not_found/NotFound";
 import MyProfile from "./pages/profile/MyProfile";
 import UserProfile from "./pages/profile/UserProfile";
+import SignUpLogin from "./pages/sign_up/SignUpLogin";
+import SignUpProfile from "./pages/sign_up/SignUpProfile";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/sign-up" element={<SignUpLogin />} />
       <Route element={<PrivateRoutes />}>
+        <Route path="/sign-up/profile" element={<SignUpProfile />}/>
         <Route path="/home" element={<Home />} />
         <Route path="/user/:id" element={<UserProfile />} />
         <Route path="/me" element={<MyProfile />} />
