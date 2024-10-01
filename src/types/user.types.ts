@@ -53,6 +53,7 @@ export interface UserWithProfile {
 export interface FriendRequestResponse {
   id: number;
   sender: UserHeader;
+  receiver: UserHeader;
   status: FriendRequestStatus;
 }
 

@@ -26,7 +26,7 @@ export default function useFetchAndSubscribeFriendRequestNotifications() {
     const eventSource = new EventSource(URL);
 
     eventSource.onmessage = (event) => {
-      setFriendNotifications((prev) => [...prev, event.data]);
+      setFriendNotifications((prev) => [...prev, JSON.parse(event.data)]);
     };
 
     eventSource.onerror = (event) => {

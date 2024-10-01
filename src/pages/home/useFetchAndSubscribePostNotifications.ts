@@ -26,7 +26,7 @@ export default function useFetchAndSubscribePostNotifications() {
     const eventSource = new EventSource(URL);
 
     eventSource.onmessage = (event) => {
-      setPostNotifications((prev) => [...prev, event.data]);
+      setPostNotifications((prev) => [...prev, JSON.parse(event.data)]);
     };
 
     eventSource.onerror = (event) => {

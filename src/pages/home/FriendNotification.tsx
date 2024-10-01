@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Button from "../../components/button/Button";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import useNavigateToUserProfile from "../../hooks/useNavigateToUserProfile";
 import useUserService from "../../services/useUserService";
-import { FriendRequestResponse } from "../../types/user.types";
+import { FriendRequestResponse, UserHeader } from "../../types/user.types";
 import getUserProfileImgSrc from "../../utils/getUserProfileImgSrc";
 
 type FriendNotificationProps = {
@@ -10,26 +11,21 @@ type FriendNotificationProps = {
 };
 
 export default function FriendNotification(props: FriendNotificationProps) {
-  const { sender, status } = props.notification;
-  const profilePictureSrc = getUserProfileImgSrc(sender.profilePicture);
+  const {notification} = props
+  const { sender, receiver, status } = notification;
+  
   return (
     <>
       {status === "WAITING_FOR_RESPONSE" ? (
         <FriendRequestNotification
           id={props.notification.id}
           senderId={sender.userId}
-          profilePictureSrc={profilePictureSrc}
+          profilePictureSrc={getUserProfileImgSrc(sender.profilePicture)}
           firstName={sender.firstName}
           lastName={sender.lastName}
         />
       ) : (
-        <ResponseFriendNotification
-          type={status === "ACCEPTED" ? "ACCEPTED" : "REJECTED"}
-          senderId={sender.userId}
-          profilePictureSrc={profilePictureSrc}
-          firstName={sender.firstName}
-          lastName={sender.lastName}
-        />
+        <ResponseFriendNotification type={status === "ACCEPTED" ? "ACCEPTED" : "REJECTED"} sender={sender} receiver={receiver} />
       )}
     </>
   );
@@ -37,20 +33,36 @@ export default function FriendNotification(props: FriendNotificationProps) {
 
 type ResponseFriendNotificationProps = {
   type: "ACCEPTED" | "REJECTED";
-  senderId: number;
-  profilePictureSrc: string;
-  firstName: string;
-  lastName: string;
+  sender: UserHeader;
+  receiver: UserHeader;
 };
 
 function ResponseFriendNotification(props: ResponseFriendNotificationProps) {
-  const { senderId, profilePictureSrc, firstName, lastName, type } = props;
+  const { type, sender, receiver } = props;
+  const [currentUserId] = useLocalStorage("user_id");
+
+  let firstName;
+  let lastName;
+  let profilePictureSrc;
+  let userId;
+  if (receiver.userId === currentUserId) {
+    firstName = sender.firstName;
+    lastName = sender.lastName;
+    profilePictureSrc = getUserProfileImgSrc(sender.profilePicture);
+    userId = sender.userId;
+  } else {
+    firstName = receiver.firstName;
+    lastName = receiver.lastName;
+    profilePictureSrc = getUserProfileImgSrc(receiver.profilePicture);
+    userId = receiver.userId;
+  }
+
   const navigate = useNavigateToUserProfile();
   return (
     <div className="flex align-items-center column-gap-small">
-      <img src={profilePictureSrc} alt="profile" className="profile-picture" style={{ cursor: "pointer" }} onClick={() => navigate(senderId)} />
+      <img src={profilePictureSrc} alt="profile" className="profile-picture" style={{ cursor: "pointer" }} onClick={() => navigate(userId)} />
       <span>
-        {firstName + " " + lastName + " "}
+        <span style={{ fontWeight: "bold" }}>{firstName + " " + lastName + " "}</span>
         {type === "ACCEPTED" ? "accepted" : "rejected"} your friend request
       </span>
     </div>
