@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "../src/css/global.css";
 import PrivateRoutes from "./components/PrivateRoutes";
+import { AuthContextProvider } from "./contexts/AuthContext";
 import Chat from "./pages/chat/Chat";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
@@ -12,19 +13,21 @@ import SignUpProfile from "./pages/sign_up/SignUpProfile";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/sign-up" element={<SignUpLogin />} />
-      <Route element={<PrivateRoutes />}>
-        <Route path="/sign-up/profile" element={<SignUpProfile />}/>
-        <Route path="/home" element={<Home />} />
-        <Route path="/user/:id" element={<UserProfile />} />
-        <Route path="/me" element={<MyProfile />} />
-      </Route>
-      <Route path="/chat" element={<Chat />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <AuthContextProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<SignUpLogin />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/sign-up/profile" element={<SignUpProfile />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/user/:id" element={<UserProfile />} />
+          <Route path="/me" element={<MyProfile />} />
+          <Route path="/chat" element={<Chat />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AuthContextProvider>
   );
 }
 

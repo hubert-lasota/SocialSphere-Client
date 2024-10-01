@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import authService from "../../services/authService";
+import useAuthService from "../../services/useAuthService";
 import { LoginResponse } from "../../types/auth.types";
 import { DataResult } from "../../types/common.types";
 import css from "./login.module.css";
 import LoginForm from "./LoginForm";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export default function Login() {
+  const authService = useAuthService();
+  const {setJwt: setJwtAuthContext} = useAuthContext();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [, setJwtItem] = useLocalStorage("jwt", "");
   const [, setUserIdItem] = useLocalStorage("user_id", "");
@@ -27,6 +30,7 @@ export default function Login() {
       setUsernameItem(username);
       setJwtItem(jwt);
       setIsAuthorized(true);
+     setJwtAuthContext(jwt);
     } else {
       setIsWarning(true);
       setIsAuthorized(false);

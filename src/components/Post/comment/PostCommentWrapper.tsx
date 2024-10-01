@@ -1,19 +1,20 @@
-import postService from "../../../services/postService";
+import usePostService from "../../../services/usePostService";
+import css from "../post.module.css";
 import AddPostComment from "./AddPostComment";
 import PostComment from "./PostComment";
 import { PostCommentContext } from "./PostCommentContext";
-import css from "../post.module.css";
 import useFetchPostComments from "./useFetchPostComments";
 
 type PostCommentWrapper = {
   postId: number;
-  decrementPostCommentCounter: () => void
-  incrementPostCommentCounter: () => void
+  decrementPostCommentCounter: () => void;
+  incrementPostCommentCounter: () => void;
 };
 
 export default function PostCommentWrapper(props: PostCommentWrapper) {
   const { postId, decrementPostCommentCounter, incrementPostCommentCounter } = props;
   const { comments, setComments, last, fetchNextCommentPage } = useFetchPostComments(postId);
+  const postService = usePostService();
 
   const handleDeletePostComment = (postCommentId: number) => {
     postService.deletePostComment(postCommentId).then((response) => {

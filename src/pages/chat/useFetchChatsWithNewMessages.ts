@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import chatService from "../../services/chatService";
+import useChatService from "../../services/useChatService";
 import { Chat } from "../../types/chat.types";
 
 export default function useFetchChatsWithNewMessages() {
   const [chatsWithNewMessages, setChatsWithNewMessages] = useState<Chat[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const chatService = useChatService();
 
   const fetchChatIds = () => {
     setLoading(true);

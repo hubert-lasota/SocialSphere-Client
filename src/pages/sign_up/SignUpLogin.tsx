@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 import CredentialInput from "../../components/input/credential_input/CredentialInput";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import authService from "../../services/authService";
+import useAuthServie from "../../services/useAuthService";
 import css from "./sign-up.module.css";
 import SignUp from "./SignUp";
 import WarningMessage from "./WarningMessage";
@@ -11,6 +11,7 @@ import WarningMessage from "./WarningMessage";
 type WarningMessageType = "differentPasswords" | "loginIsNotValid" | "passwordIsNotValid" | "";
 
 export default function SignUpLogin() {
+  const authService = useAuthServie();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordTemp, setPasswordTemp] = useState<string>("");

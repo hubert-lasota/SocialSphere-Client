@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Button from "../../components/button/Button";
 import useNavigateToUserProfile from "../../hooks/useNavigateToUserProfile";
+import useUserService from "../../services/useUserService";
 import { FriendRequestResponse } from "../../types/user.types";
 import getUserProfileImgSrc from "../../utils/getUserProfileImgSrc";
-import userService from "../../services/userService";
 
 type FriendNotificationProps = {
   notification: FriendRequestResponse;
@@ -37,7 +37,7 @@ export default function FriendNotification(props: FriendNotificationProps) {
 
 type ResponseFriendNotificationProps = {
   type: "ACCEPTED" | "REJECTED";
-  senderId: number
+  senderId: number;
   profilePictureSrc: string;
   firstName: string;
   lastName: string;
@@ -48,7 +48,7 @@ function ResponseFriendNotification(props: ResponseFriendNotificationProps) {
   const navigate = useNavigateToUserProfile();
   return (
     <div className="flex align-items-center column-gap-small">
-      <img src={profilePictureSrc} alt="profile" className="profile-picture" style={{cursor: "pointer"}} onClick={() => navigate(senderId)}/>
+      <img src={profilePictureSrc} alt="profile" className="profile-picture" style={{ cursor: "pointer" }} onClick={() => navigate(senderId)} />
       <span>
         {firstName + " " + lastName + " "}
         {type === "ACCEPTED" ? "accepted" : "rejected"} your friend request
@@ -67,6 +67,7 @@ type FriendRequestNotificationProps = {
 
 function FriendRequestNotification(props: FriendRequestNotificationProps) {
   const { id, senderId, profilePictureSrc, firstName, lastName } = props;
+  const userService = useUserService();
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const [isRejected, setIsRejected] = useState<boolean>(false);
   const navigate = useNavigateToUserProfile();

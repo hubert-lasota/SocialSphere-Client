@@ -3,7 +3,7 @@ import { faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { FaRegCommentDots } from "react-icons/fa";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import css from "./post.module.css";
 import { usePostContext } from "./PostContext";
 
@@ -11,6 +11,7 @@ export default function PostFooter() {
   const { post, openComments } = usePostContext();
   const [likes, setLikes] = useState<number>(post.likeCount);
   const [isLiked, setIsLiked] = useState<boolean>(post.isLiked);
+  const postService = usePostService();
 
   const addLike = () => {
     postService.addLikeToPost(post.id).catch(() => {

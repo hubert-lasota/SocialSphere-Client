@@ -6,7 +6,7 @@ import Main from "./Main";
 import Profile from "./Profile";
 
 export default function MyProfile() {
-  const [currentUserId] = useLocalStorage("user_id", "");
+  const [currentUserId] = useLocalStorage("user_id");
 
   return (
     <Profile

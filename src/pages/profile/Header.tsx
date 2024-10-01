@@ -3,7 +3,7 @@ import { FaUserMinus, FaUserPlus } from "react-icons/fa6";
 import Button from "../../components/button/Button";
 import HomeNavigateButton from "../../components/HomeNavigateButton";
 import Loading from "../../components/loading/Loading";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { FriendRequestResponse } from "../../types/user.types";
 import getUserProfileImgSrc from "../../utils/getUserProfileImgSrc";
 import css from "./profile.module.css";
@@ -16,6 +16,7 @@ type HeaderProps = {
 export default function Header(props: HeaderProps) {
   const { children } = props;
   const { userProfile } = useProfileContext();
+
   return (
     <header className={css["header"]}>
       <div className={"flex align-items-center column-gap-small " + css["header__left-side"]}>
@@ -32,6 +33,7 @@ Header.FriendResponseButton = function HeaderFriendResponseButton() {
   const [friendRequest, setFriendRequest] = useState<FriendRequestResponse | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [isReplied, setIsReplied] = useState<boolean>(false);
+  const userService = useUserService();
 
   useEffect(() => {
     setLoading(true);
@@ -92,6 +94,7 @@ Header.FriendButton = function HeaderFriendButton() {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState<boolean>(true);
   const { user } = useProfileContext();
   const { relationshipStatus } = user;
+  const userService = useUserService();
 
   useEffect(() => {
     userService
@@ -113,14 +116,12 @@ Header.FriendButton = function HeaderFriendButton() {
   };
 
   const removeFriend = () => {
-    userService
-      .removeFriendFromFriendList(user.id)
-      .then((response) => {
-        if (response.success) {
-          setIsWaitingForResponse(true);
-        }
-      })
-     // .finally(() => window.location.reload());
+    userService.removeFriendFromFriendList(user.id).then((response) => {
+      if (response.success) {
+        setIsWaitingForResponse(true);
+      }
+    });
+    // .finally(() => window.location.reload());
   };
 
   if (loading) {

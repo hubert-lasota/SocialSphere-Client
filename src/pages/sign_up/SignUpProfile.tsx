@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 import FileUploader from "../../components/file_uploader/FileUploader";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { ProfilePrivacyLevel, UserProfileRequest } from "../../types/user.types";
 import css from "./sign-up.module.css";
 import SignUp from "./SignUp";
@@ -11,6 +11,7 @@ import WarningMessage from "./WarningMessage";
 type WarningMessageType = "firstNameIsNotValid" | "lastNameIsNotValid" | "cityIsNotValid" | "countryIsNotValid" | "";
 
 export default function SignUpProfile() {
+  const userService = useUserService();
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [city, setCity] = useState<string>("");
@@ -73,7 +74,7 @@ export default function SignUpProfile() {
               onFileRemove={handleRemoveProfilePicture}
               onFilesUpload={handleUploadProfilePicture}
               addFileMessage="Add profile picture"
-              additionalStyle={warningMessageType === "" ? { width: "400px" } : {width: "100%"}}
+              additionalStyle={warningMessageType === "" ? { width: "400px" } : { width: "100%" }}
             />
             <Button styleType="primary" additionalStyle={css["profile__btn"]} onClick={handleCreateProfile}>
               Create

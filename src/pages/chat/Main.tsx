@@ -7,7 +7,6 @@ import css from "./chat.module.css";
 import { useChatContext } from "./ChatContext";
 import Message from "./Message";
 import useFetchChatMessages from "./useFetchChatMessages";
-import getDateDifference from "../../utils/getDateDifference";
 
 export default function Main() {
   const { subscribedMessages, sendMessage, currentChat, setSeenMessagesInChat } = useChatContext();

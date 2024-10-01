@@ -1,5 +1,5 @@
 import { useState } from "react";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import { FileDetails } from "../../types/common.types";
 import fileDetailsToFile from "../../utils/fileDetailsToFile";
 import fileToFileDetails from "../../utils/fileToFileDetails";
@@ -16,6 +16,7 @@ type PostContentProps = {
 export default function PostContent(props: PostContentProps) {
   const { isEditModeOn } = props;
   const { post, cancelUpdatePost, updatePost } = usePostContext();
+  const postService = usePostService();
 
   const [editableContent, setEditableContent] = useState<string>(post.content);
   const [images, setImages] = useState<FileDetails[] | null>(post.images);

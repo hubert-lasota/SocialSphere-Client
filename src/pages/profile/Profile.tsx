@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import Loading from "../../components/loading/Loading";
 import { ManagePostsContext } from "../../contexts/ManagePostsContext";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import css from "./profile.module.css";
 import { ProfileContentType } from "./profile.types";
 import { ProfileContext } from "./ProfileContext";
@@ -22,6 +22,7 @@ export default function Profile(props: ProfileProps) {
   const { posts, setPosts, loading: postsLoading, fetchNextPage: fetchNextPostPage } = useFetchPosts(userId);
   const { friends, loading: friendsLoading, fetchNextPage: fetchNextFriendPage } = useFetchFriends(userId);
   const [contentType, setContentType] = useState<ProfileContentType>("posts");
+  const postService = usePostService();
 
   const handleSetProfileContentType = (content: ProfileContentType) => {
     setContentType(content);

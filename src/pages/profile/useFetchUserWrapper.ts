@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { UserWrapper } from "../../types/user.types";
 
 export default function useFetchUserWrapper(userId: number) {
   const [userWrapper, setUserWrapper] = useState<UserWrapper>();
   const [loading, setLoading] = useState<boolean>(true);
+  const userService = useUserService();
 
   useEffect(() => {
     setLoading(true);

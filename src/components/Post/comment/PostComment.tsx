@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useLocalStorage from "../../../hooks/useLocalStorage";
-import postService from "../../../services/postService";
+import usePostService from "../../../services/usePostService";
 import { PostComment as IPostComment } from "../../../types/post.types";
 import base64ToImgSrc from "../../../utils/base64ToImgSrc";
 import getDateDifference from "../../../utils/getDateDifference";
 import getDefaultUserProfilePictureSrc from "../../../utils/getDefaultUserProfilePictureSrc";
 import Button from "../../button/Button";
-import PostCommentAuthorButton from "./PostCommentAuthorButton";
 import css from "../post.module.css";
+import PostCommentAuthorButton from "./PostCommentAuthorButton";
 
 type PostCommentProps = {
   comment: IPostComment;
@@ -20,6 +20,7 @@ export default function PostComment(props: PostCommentProps) {
   const { comment, postId, onDelete } = props;
   const { id, content: initialContent, authorId, authorProfile, createdAt } = comment;
   const { profilePicture, firstName, lastName } = authorProfile;
+  const postService = usePostService();
   const [currentUserId] = useLocalStorage("user_id", "");
 
   const [isEditModeOn, setIsEditModeOn] = useState<boolean>(false);

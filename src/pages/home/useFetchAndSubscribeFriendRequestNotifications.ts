@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { FriendRequestResponse } from "../../types/user.types";
 
 export default function useFetchAndSubscribeFriendRequestNotifications() {
-  const [jwt] = useLocalStorage("jwt", "");
+  const [jwt] = useLocalStorage("jwt");
+  const userService = useUserService();
   const [friendNotifications, setFriendNotifications] = useState<FriendRequestResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

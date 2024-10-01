@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import userService from "../services/userService";
+import useUserService from "../services/useUserService";
 import { UserHeader } from "../types/user.types";
 
 const initialCurrentUser: UserHeader = {
@@ -7,12 +7,13 @@ const initialCurrentUser: UserHeader = {
   firstName: "",
   lastName: "",
   profilePicture: null,
-  relationshipStatus: "YOU"
-}
+  relationshipStatus: "YOU",
+};
 
 export default function useFetchCurrentUserHeader() {
   const [currentUser, setCurrentUser] = useState<UserHeader>(initialCurrentUser);
   const [loading, setLoading] = useState<boolean>(true);
+  const userService = useUserService();
 
   const fetchCurrentUserHeader = () => {
     setLoading(true);

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import postService from "../../../services/postService";
+import usePostService from "../../../services/usePostService";
 import { PostComment } from "../../../types/post.types";
 
 export default function useFetchPostComments(postId: number) {
   const [comments, setComments] = useState<PostComment[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
+  const postService = usePostService();
 
   const page = useRef<number>(0);
 

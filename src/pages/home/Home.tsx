@@ -1,6 +1,6 @@
 import Loading from "../../components/loading/Loading";
 import { ManagePostsContext } from "../../contexts/ManagePostsContext";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import { PostRequest } from "../../types/post.types";
 import Header from "./Header";
 import css from "./home.module.css";
@@ -11,6 +11,7 @@ import useFetchPostsForCurrentUser from "./useFetchPostsForCurrentUser";
 
 export default function Home() {
   const { posts, setPosts, loading, fetchNextPage } = useFetchPostsForCurrentUser();
+  const postService = usePostService();
 
   const handleEndOfPage = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import { Post } from "../../types/post.types";
 
 export default function useFetchPostsForCurrentUser() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
+  const postService = usePostService();
 
   const page = useRef<number>(0);
 

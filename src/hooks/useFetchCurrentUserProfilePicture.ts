@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import userService from "../services/userService";
+import useUserService from "../services/useUserService";
 import base64ToImgSrc from "../utils/base64ToImgSrc";
 import getDefaultUserProfilePictureSrc from "../utils/getDefaultUserProfilePictureSrc";
 
 export default function useFetchCurrentUserProfilePicture() {
+  const userService = useUserService();
   const [picture, setPicture] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 

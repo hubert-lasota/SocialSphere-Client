@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import { PostNotification } from "../../types/post.types";
 
 export default function useFetchAndSubscribePostNotifications() {
-  const [jwt] = useLocalStorage("jwt", "");
+  const [jwt] = useLocalStorage("jwt");
+  const postService = usePostService();
   const [postNotifications, setPostNotifications] = useState<PostNotification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

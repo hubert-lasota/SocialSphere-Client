@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading/Loading";
 import useFetchCurrentUserHeader from "../../hooks/useFetchCurrentUserHeader";
-import chatService from "../../services/chatService";
+import useChatService from "../../services/useChatService";
 import { Chat as IChat } from "../../types/chat.types";
 import { ChatContext } from "./ChatContext";
 import Header from "./Header";
@@ -18,6 +18,7 @@ export default function Chat() {
   const { chatsWithNewMessages, loading: chatIdsWithNewMessageLoading } = useFetchChatsWithNewMessages();
   const { currentUser, loading: currentUserLoading } = useFetchCurrentUserHeader();
   const [currentChat, setCurrentChat] = useState<IChat | undefined>(chats?.[0]);
+  const chatService = useChatService();
 
   useEffect(() => {
     let didUpdate = false;
@@ -55,7 +56,7 @@ export default function Chat() {
     });
   };
 
-  if (chatsLoading || chatIdsWithNewMessageLoading || currentUserLoading /*|| messagesLoading */) {
+  if (chatsLoading || chatIdsWithNewMessageLoading || currentUserLoading) {
     return <Loading pageLoading={true} />;
   }
 

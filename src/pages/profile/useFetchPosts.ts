@@ -1,36 +1,40 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import postService from "../../services/postService";
+import usePostService from "../../services/usePostService";
 import { Post } from "../../types/post.types";
 
 export default function useFetchPosts(userId: number) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
+  const postService = usePostService();
 
   const page = useRef<number>(0);
 
   // firstFetch to handle React Strict mode double re-render
-  const fetchPosts = useCallback((page: number, firstFetch: boolean) => {
-    setLoading(true);
+  const fetchPosts = useCallback(
+    (page: number, firstFetch: boolean) => {
+      setLoading(true);
 
-    postService
-      .findUserPostPage(page, 10, userId)
-      .then((response) => {
-        if (response.success) {
-          const fetchedPage = response.data;
-          const newPosts = fetchedPage.content;
-          setIsLastPage(fetchedPage.last);
-          if (firstFetch) {
-            setPosts(newPosts);
+      postService
+        .findUserPostPage(page, 10, userId)
+        .then((response) => {
+          if (response.success) {
+            const fetchedPage = response.data;
+            const newPosts = fetchedPage.content;
+            setIsLastPage(fetchedPage.last);
+            if (firstFetch) {
+              setPosts(newPosts);
+            } else {
+              setPosts((prev) => [...prev, ...newPosts]);
+            }
           } else {
-            setPosts((prev) => [...prev, ...newPosts]);
+            setIsLastPage(true);
           }
-        } else {
-          setIsLastPage(true);
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [userId]);
+        })
+        .finally(() => setLoading(false));
+    },
+    [userId]
+  );
 
   useEffect(() => {
     fetchPosts(page.current, true);

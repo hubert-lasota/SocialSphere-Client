@@ -3,12 +3,11 @@ import Button from "../../components/button/Button";
 import SelectDropdown from "../../components/dropdown/SelectDropdown";
 import FileUploader from "../../components/file_uploader/FileUploader";
 import EditableInput from "../../components/input/EditableInput/EditableInput";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { ProfilePrivacyLevel, UserProfile, UserProfileConfig } from "../../types/user.types";
 import fileToBase64 from "../../utils/fileToBase64";
 import { useProfileContext } from "./ProfileContext";
 import css from "./profile.module.css";
-import { width } from "@fortawesome/free-solid-svg-icons/faX";
 
 type SettingsTab = "profile" | "config";
 
@@ -39,6 +38,7 @@ function MainSettingsProfile() {
   const [city, setCity] = useState<string>(userProfile.city);
   const [country, setCountry] = useState<string>(userProfile.country);
   const [profilePicture, setProfilePicture] = useState<string | null>(userProfile.profilePicture);
+  const userService = useUserService();
 
   const handleFileUpload = (files: File[]) => {
     fileToBase64(files[0], false).then((val) => setProfilePicture(val));
@@ -85,11 +85,12 @@ function MainSettingsConfig() {
   const { userConfig } = useProfileContext();
   const [profilePrivacyLevel, setProfilePrivacyLevel] = useState<ProfilePrivacyLevel>(userConfig.profilePrivacyLevel);
   const profilePrivacyLevelArr: ProfilePrivacyLevel[] = [ProfilePrivacyLevel.PRIVATE, ProfilePrivacyLevel.FRIENDS, ProfilePrivacyLevel.PUBLIC];
+  const userService = useUserService();
 
   const handleUpdate = () => {
-    const newConfig: UserProfileConfig = {profilePrivacyLevel};
+    const newConfig: UserProfileConfig = { profilePrivacyLevel };
     userService.updateUserProfileConfig(newConfig).finally(() => window.location.reload());
-  }
+  };
 
   return (
     <div className={css["main__settings__config"]}>
@@ -100,7 +101,9 @@ function MainSettingsConfig() {
           return <div onClick={() => setProfilePrivacyLevel(privacyLevel)}>{privacyLevel}</div>;
         })}
       />
-      <Button styleType="primary" additionalStyle={css["main__settings__config__btn"]} onClick={handleUpdate}>Update</Button>
+      <Button styleType="primary" additionalStyle={css["main__settings__config__btn"]} onClick={handleUpdate}>
+        Update
+      </Button>
     </div>
   );
 }

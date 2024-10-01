@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import chatService from "../../services/chatService";
+import useChatService from "../../services/useChatService";
 import { ChatMessage } from "../../types/chat.types";
 
 export default function useFetchChatMessages(chatId: number | undefined) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const chatService = useChatService();
 
   const findMessages = () => {
     if (!chatId) return;

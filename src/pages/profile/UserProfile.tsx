@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
 import UserCard from "../../components/user/UserCard";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import Header from "./Header";
 import LeftAside from "./LeftAside";
 import Main from "./Main";
@@ -14,6 +14,7 @@ export default function UserProfile() {
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const isAllowedTemp = useRef<boolean>(isAllowed);
   const [isWaitingForFriendResponse, setIsWaitingForFriendResponse] = useState<boolean>(false);
+  const userService = useUserService();
 
   useEffect(() => {
     setLoading(true);

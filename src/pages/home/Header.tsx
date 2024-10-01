@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "../../components/dropdown/Dropdown";
 import css from "./home.module.css";
@@ -12,9 +11,9 @@ export default function Header() {
   return (
     <header className={css["header"]}>
       <SearchBar />
-      <Dropdown header={<Dropdown.HeaderUserProfileImg />} additionalStyle={{marginRight: "6rem"}}>
-          <div onClick={() => navigate("/me")}>Profile</div>
-          <div onClick={logout}>Logout</div>
+      <Dropdown header={<Dropdown.HeaderUserProfileImg />} additionalStyle={{ marginRight: "6rem" }}>
+        <div onClick={() => navigate("/me")}>Profile</div>
+        <div onClick={logout}>Logout</div>
       </Dropdown>
     </header>
   );

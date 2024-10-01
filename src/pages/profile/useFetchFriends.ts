@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import useIsCurrentUser from "../../hooks/useIsCurrentUser";
-import userService from "../../services/userService";
+import useUserService from "../../services/useUserService";
 import { UserWithProfile } from "../../types/user.types";
 
 export default function useFetchFriends(userId: number) {
@@ -9,6 +9,7 @@ export default function useFetchFriends(userId: number) {
   const isLast = useRef<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [friends, setFriends] = useState<UserWithProfile[]>([]);
+  const userService = useUserService();
 
   // isFirstFetch to handle react re-render
   const fetchFriendsPage = useCallback(
