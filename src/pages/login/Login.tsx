@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import authService from "../../services/authService";
 import { LoginResponse } from "../../types/auth.types";
@@ -33,6 +33,10 @@ export default function Login() {
     }
   }
 
+  if (isAuthorized) {
+    navigate("/home");
+  }
+
   return (
     <div className={css["login"]}>
       <div className={css["login__sign-up"]}>
@@ -46,7 +50,6 @@ export default function Login() {
       </div>
 
       <LoginForm isWarning={isWarning} handleSignIn={handleSignIn} />
-      {isAuthorized ? <Navigate to="/home" /> : <></>}
     </div>
   );
 }
