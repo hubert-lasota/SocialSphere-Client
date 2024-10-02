@@ -50,11 +50,11 @@ export interface UserWithProfile {
   userProfile: UserProfile;
 }
 
-export interface FriendRequestResponse {
+export interface FriendNotification {
   id: number;
   sender: UserHeader;
-  receiver: UserHeader;
   status: FriendRequestStatus;
+  sentAt: string;
 }
 
 export type FriendRequestStatus = "ACCEPTED" | "REJECTED" | "WAITING_FOR_RESPONSE";

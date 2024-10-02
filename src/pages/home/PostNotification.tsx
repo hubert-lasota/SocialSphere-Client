@@ -15,7 +15,7 @@ export default function PostNotification(props: PostNotificationProps) {
   if (isNotificationClicked) {
     return (
       <Modal open={true} onClose={() => setIsNotificationClicked(false)}>
-        <Post post={updatedPost} additionalStyle={{padding: "1.5rem"}}/>
+        <Post post={updatedPost} additionalStyle={{ padding: "1.5rem" }} />
       </Modal>
     );
   }
@@ -24,7 +24,7 @@ export default function PostNotification(props: PostNotificationProps) {
     <div className="flex align-items-center column-gap-small" style={{ cursor: "pointer" }} onClick={() => setIsNotificationClicked(true)}>
       <img src={getUserProfileImgSrc(updatedBy?.profilePicture || null)} alt="profile" className="profile-picture" style={{ cursor: "pointer" }} />
       <span>
-        {updatedBy.firstName + " " + updatedBy.lastName + " "}
+        <span style={{ fontWeight: 500 }}>{updatedBy.firstName + " " + updatedBy.lastName + " "} </span>
         {updateType === "LIKE" ? "liked " : "commented "}your post
       </span>
     </div>
