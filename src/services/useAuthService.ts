@@ -4,6 +4,7 @@ import useFetchService from "./useFetchService";
 
 interface AuthService {
   login: (credentials: LoginRequest) => Promise<DataResult<LoginResponse>>;
+  logout: (userToken: LoginTokenRequest) => Promise<DataResult<any>>;
   createLogin: (credentials: LoginRequest) => Promise<DataResult<LoginResponse>>;
   validateUserToken: (userToken: LoginTokenRequest) => Promise<DataResult<LoginResponse>>;
 }
@@ -17,6 +18,13 @@ export default function useAuthServie(): AuthService {
     return post(finalUrl, credentials);
   };
 
+  
+  const logout = (userToken: LoginTokenRequest) => {
+    const finalUrl = URL + "/logout";
+    return post(finalUrl, userToken);
+  };
+
+
   const validateUserToken = (userToken: LoginTokenRequest) => {
     const finalUrl: string = URL + "/validate";
     return post(finalUrl, userToken) as Promise<DataResult<LoginResponse>>;
@@ -28,5 +36,5 @@ export default function useAuthServie(): AuthService {
     return post(finalUrl, credentials);
   };
 
-  return { login, createLogin, validateUserToken };
+  return { login, logout, createLogin, validateUserToken };
 }

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { useAuthContext } from "../../contexts/AuthContext";
 import usePostService from "../../services/usePostService";
 import { PostNotification } from "../../types/post.types";
 
 export default function useFetchAndSubscribePostNotifications() {
-  const [jwt] = useLocalStorage("jwt");
+  const { jwt } = useAuthContext();
   const postService = usePostService();
   const [postNotifications, setPostNotifications] = useState<PostNotification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,7 +36,7 @@ export default function useFetchAndSubscribePostNotifications() {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [jwt]);
 
   return { postNotifications, loading };
 }

@@ -18,7 +18,7 @@ export default function LeftAside() {
           </div>
           <div className={css["left-aside__btns__messages-text"]}>Messages</div>
         </div>
-        <div>
+        <div onClick={() => navigate("/friends")}>
           <div className={css["left-aside__btns__friends-icon"]}><LiaUserFriendsSolid /></div>
           <div className={css["left-aside__btns__friends-text"]}>Friends</div>
         </div>

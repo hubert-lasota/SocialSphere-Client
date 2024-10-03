@@ -1,6 +1,7 @@
 import { DataResult, Page } from "../types/common.types";
 import {
-  FriendRequestResponse,
+  FriendNotification,
+  SearchFriendsRequest,
   UserHeader,
   UserProfile,
   UserProfileConfig,
@@ -14,19 +15,20 @@ import useFetchService, { UrlParameter } from "./useFetchService";
 interface UserService {
   createProfile: (userProfileRequest: UserProfileRequest, profilePicture: File | null) => Promise<DataResult<UserProfile>>;
   createProfileConfig: (userProfileConfig: UserProfileConfig) => Promise<DataResult<UserProfileConfig>>;
-  sendFriendRequest: (receiverId: number) => Promise<DataResult<FriendRequestResponse>>;
+  sendFriendRequest: (receiverId: number) => Promise<DataResult<FriendNotification>>;
   acceptFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
   rejectFriendRequest: (friendRequestId: number) => Promise<DataResult<any>>;
   getLoggedInUserProfilePicutre: () => Promise<DataResult<string>>;
   getLoggedInUser: () => Promise<DataResult<UserWrapper>>;
   getLoggedInUserHeader: () => Promise<DataResult<UserHeader>>;
   searchUsers: (pattern: string, size: number) => Promise<DataResult<UserHeader[]>>;
+  searchFriends: (searchFriendsRequest: SearchFriendsRequest, page: number, size: number) => Promise<DataResult<Page<UserWithProfile>>>;
   findMyFriends: (page: number, size: number) => Promise<DataResult<Page<UserWithProfile>>>;
   findMyFriendsWithNoSharedChats: () => Promise<DataResult<UserWithProfile[]>>;
   findUserFriends: (userId: number, page: number, size: number) => Promise<DataResult<Page<UserWithProfile>>>;
   findUser: (userId: number) => Promise<DataResult<UserWrapper>>;
-  findCurrentUserFriendNotifications: () => Promise<DataResult<FriendRequestResponse[]>>;
-  findUserFriendRequestForCurrentUser: (userId: number) => Promise<DataResult<FriendRequestResponse>>;
+  findCurrentUserFriendNotifications: () => Promise<DataResult<FriendNotification[]>>;
+  findUserFriendRequestForCurrentUser: (userId: number) => Promise<DataResult<FriendNotification>>;
   updateUserProfile: (userProfile: UserProfile) => Promise<DataResult<UserProfile>>;
   updateUserProfileConfig: (useProfileConfig: UserProfileConfig) => Promise<DataResult<UserProfileConfig>>;
   removeFriendFromFriendList: (friendId: number) => Promise<DataResult<any>>;
@@ -102,6 +104,22 @@ export default function useUserService(): UserService {
     ];
     const finalUrl = URL + "/search";
     return get(finalUrl, urlParams);
+  };
+
+  const searchFriends = (searchFriendsRequest: SearchFriendsRequest, page: number, size: number) => {
+    const { firstNamePattern, lastNamePattern, cityPattern, countryPattern, relationshipStatus } = searchFriendsRequest;
+    const finalUrl = URL + "/friend/search";
+    const params: UrlParameter[] = [
+      { key: "firstNamePattern", value: firstNamePattern },
+      { key: "lastNamePattern", value: lastNamePattern },
+      { key: "cityPattern", value: cityPattern },
+      { key: "countryPattern", value: countryPattern },
+      { key: "relationshipStatus", value: relationshipStatus },
+      { key: "page", value: page.toString() },
+      { key: "size", value: size.toString() },
+    ];
+
+    return get(finalUrl, params);
   };
 
   const findMyFriends = (page: number, size: number) => {
@@ -210,6 +228,7 @@ export default function useUserService(): UserService {
     getLoggedInUserProfilePicutre,
     getLoggedInUserHeader,
     searchUsers,
+    searchFriends,
     findMyFriends,
     findMyFriendsWithNoSharedChats,
     findUserFriends,

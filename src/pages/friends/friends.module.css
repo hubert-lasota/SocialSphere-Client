@@ -1,0 +1,56 @@
+.friends {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.friends > * {
+  width: 100%;
+}
+
+.header {
+  height: 11%;
+  background-color: var(--outer-background-color);
+  padding: 1rem;
+
+  display: flex;
+  align-items: center;
+  column-gap: 2rem;
+}
+
+.header__input {
+  background-color: var(--inner-background-color);
+  padding: 0.2rem 1rem;
+  border-radius: 6px;
+  height: 70%;
+}
+
+.header__btn {
+  margin-left: 3rem;
+  width: 20%;
+}
+
+.header__home-btn {
+  cursor: pointer;
+  margin-left: 6rem;
+  font-size: 3rem;
+}
+
+.main {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  overflow-y: auto;
+  height: 100%;
+  background-color: var(--inner-background-color);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 2rem;
+}
+
+.main > * {
+  width: 30%;
+  height: 20%;
+  border-radius: 6px;
+  padding: 1.5rem;
+}

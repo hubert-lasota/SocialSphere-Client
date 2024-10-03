@@ -58,3 +58,18 @@ export interface FriendNotification {
 }
 
 export type FriendRequestStatus = "ACCEPTED" | "REJECTED" | "WAITING_FOR_RESPONSE";
+
+
+export interface SearchFriendsRequest {
+  firstNamePattern: string;
+  lastNamePattern: string;
+  cityPattern: string;
+  countryPattern: string;
+  relationshipStatus: SearchFriendsRelationshipStatus;
+}
+
+export enum SearchFriendsRelationshipStatus {
+  ALL = "ALL",
+  STRANGER = "STRANGER",
+  FRIENDS = "FRIENDS",
+}

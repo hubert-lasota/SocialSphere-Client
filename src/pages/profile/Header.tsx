@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { FaUserMinus, FaUserPlus } from "react-icons/fa6";
 import Button from "../../components/button/Button";
-import HomeNavigateButton from "../../components/HomeNavigateButton";
+import HomeNavigateButton from "../../components/button/HomeNavigateButton";
 import Loading from "../../components/loading/Loading";
 import useUserService from "../../services/useUserService";
 import { FriendRequestResponse } from "../../types/user.types";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RiChatNewLine } from "react-icons/ri";
-import HomeNavigateButton from "../../components/HomeNavigateButton";
+import HomeNavigateButton from "../../components/button/HomeNavigateButton";
 import Modal from "../../components/modal/Modal";
 import AddChatModal from "./AddChatModal";
 import css from "./chat.module.css";

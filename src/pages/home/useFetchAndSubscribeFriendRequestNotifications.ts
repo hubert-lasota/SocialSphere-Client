@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { useAuthContext } from "../../contexts/AuthContext";
 import useUserService from "../../services/useUserService";
 import { FriendNotification } from "../../types/user.types";
 
 export default function useFetchAndSubscribeFriendRequestNotifications() {
-  const [jwt] = useLocalStorage("jwt");
+  const { jwt } = useAuthContext();
   const userService = useUserService();
   const [friendNotifications, setFriendNotifications] = useState<FriendNotification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,9 +20,9 @@ export default function useFetchAndSubscribeFriendRequestNotifications() {
       .finally(() => setLoading(false));
   }, []);
 
-  const URL = `http://localhost:8080/api/v1/user/friend/notification/subscribe?jwt=${jwt}`;
-
+  
   useEffect(() => {
+    const URL = `http://localhost:8080/api/v1/user/friend/notification/subscribe?jwt=${jwt}`;
     const eventSource = new EventSource(URL);
 
     eventSource.onmessage = (event) => {
@@ -36,7 +36,7 @@ export default function useFetchAndSubscribeFriendRequestNotifications() {
     return () => {
       eventSource.close();
     };
-  }, []);
+  }, [jwt]);
 
   return { friendNotifications, loading };
 }

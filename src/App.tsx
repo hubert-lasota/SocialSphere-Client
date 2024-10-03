@@ -3,6 +3,7 @@ import "../src/css/global.css";
 import PrivateRoutes from "./components/PrivateRoutes";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import Chat from "./pages/chat/Chat";
+import Friends from "./pages/friends/Friends";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import NotFound from "./pages/not_found/NotFound";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/user/:id" element={<UserProfile />} />
           <Route path="/me" element={<MyProfile />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/friends" element={<Friends />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
