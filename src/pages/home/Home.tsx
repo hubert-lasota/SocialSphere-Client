@@ -1,5 +1,6 @@
 import Loading from "../../components/loading/Loading";
 import { ManagePostsContext } from "../../contexts/ManagePostsContext";
+import useFetchCurrentUserProfilePicture from "../../hooks/useFetchCurrentUserProfilePicture";
 import usePostService from "../../services/usePostService";
 import { PostRequest } from "../../types/post.types";
 import Header from "./Header";
@@ -10,9 +11,9 @@ import RightAside from "./RightAside";
 import useFetchPostsForCurrentUser from "./useFetchPostsForCurrentUser";
 
 export default function Home() {
-  const { posts, setPosts, loading, fetchNextPage } = useFetchPostsForCurrentUser();
+  const { posts, setPosts, loading: postLoading, fetchNextPage } = useFetchPostsForCurrentUser();
   const postService = usePostService();
-
+  const {picture, loading: profileLoading} = useFetchCurrentUserProfilePicture();
   const handleEndOfPage = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       fetchNextPage();
@@ -36,11 +37,12 @@ export default function Home() {
   };
 
   const postContextValue = {
+    currentUserProfilePictureSrc: picture,
     onAddPost: handleAddPost,
     onDeletePost: handleDeletePost,
   };
 
-  if (loading) {
+  if (postLoading || profileLoading) {
     return <Loading pageLoading={true} />;
   }
 

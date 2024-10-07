@@ -7,7 +7,7 @@ export default function useFetchChatsWithNewMessages() {
   const [loading, setLoading] = useState<boolean>(true);
   const chatService = useChatService();
 
-  const fetchChatIds = () => {
+  const fetchChats = () => {
     setLoading(true);
     chatService
       .findCurrentUserChatsWithNewMessages()
@@ -20,7 +20,7 @@ export default function useFetchChatsWithNewMessages() {
   };
 
   useEffect(() => {
-    fetchChatIds();
+    fetchChats();
   }, []);
 
   return { chatsWithNewMessages, setChatsWithNewMessages, loading };

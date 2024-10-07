@@ -8,6 +8,7 @@ import { ProfileContext } from "./ProfileContext";
 import useFetchFriends from "./useFetchFriends";
 import useFetchPosts from "./useFetchPosts";
 import useFetchUserWrapper from "./useFetchUserWrapper";
+import useFetchCurrentUserProfilePicture from "../../hooks/useFetchCurrentUserProfilePicture";
 
 type ProfileProps = {
   userId: number;
@@ -21,6 +22,7 @@ export default function Profile(props: ProfileProps) {
   const { userWrapper, loading: userLoading } = useFetchUserWrapper(userId);
   const { posts, setPosts, loading: postsLoading, fetchNextPage: fetchNextPostPage } = useFetchPosts(userId);
   const { friends, loading: friendsLoading, fetchNextPage: fetchNextFriendPage } = useFetchFriends(userId);
+  const {picture: currentUserProfilePictureSrc, loading: profilePicLoading} = useFetchCurrentUserProfilePicture();
   const [contentType, setContentType] = useState<ProfileContentType>("posts");
   const postService = usePostService();
 
@@ -34,7 +36,7 @@ export default function Profile(props: ProfileProps) {
     await postService.deletePost(postId);
   };
 
-  if (userLoading || postsLoading || friendsLoading) {
+  if (userLoading || postsLoading || friendsLoading || profilePicLoading) {
     return <Loading pageLoading={true} />;
   }
 
@@ -54,6 +56,7 @@ export default function Profile(props: ProfileProps) {
     >
       <ManagePostsContext.Provider
         value={{
+          currentUserProfilePictureSrc,
           onAddPost: (post) => {
             throw new Error("It should not be used in profile components");
           },

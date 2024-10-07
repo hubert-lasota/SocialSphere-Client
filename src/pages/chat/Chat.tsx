@@ -25,8 +25,11 @@ export default function Chat() {
     subscribedMessages.forEach((mess) => {
       const chat = chats.find((ch) => ch.id === mess.chatId);
       if (chat) {
-        chat.hasNotSeenMessages = true;
-        didUpdate = true;
+        const mess = subscribedMessages[subscribedMessages.length - 1];
+        if (mess.sender.userId !== currentUser.userId) {
+          chat.hasNotSeenMessages = true;
+          didUpdate = true;
+        }
       }
 
       if (didUpdate) setChats([...chats]);

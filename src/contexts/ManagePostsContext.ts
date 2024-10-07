@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import { PostRequest } from "../types/post.types";
 
 type ManagePostsContextValue = {
+  currentUserProfilePictureSrc: string;
   onAddPost: (post: PostRequest) => Promise<void>;
   onDeletePost: (postId: number) => Promise<void>;
 };

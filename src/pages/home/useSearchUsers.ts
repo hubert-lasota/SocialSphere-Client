@@ -15,6 +15,8 @@ export default function useSearchusers() {
       .then((response) => {
         if (response.success) {
           setFoundUsers(response.data);
+        } else {
+          setFoundUsers([]);
         }
       })
       .finally(() => setLoading(false));

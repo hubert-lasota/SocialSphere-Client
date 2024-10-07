@@ -51,7 +51,7 @@ export default function SignUpLogin() {
       <SignUp>
         <div className={css["login"]}>
           <div className={css["login-container"]}>
-            <div className={css["login__header"]}>Create account!</div>
+            <div className={css["login__header"]}>Create account</div>
             <div className={css["login__fields"]}>
               <CredentialInput
                 inputValue={username}

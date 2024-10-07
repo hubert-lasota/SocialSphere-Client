@@ -306,7 +306,6 @@
   right: 0;
   height: 100vh;
   width: var(--right-aside-width);
-  max-height: 85vh;
   padding: var(--spacing-small);
   background-color: var(--inner-background-color);
   border-top: 1px solid var(--inner-border-color);
@@ -314,7 +313,7 @@
 
 .right-aside-container {
   padding: 1rem;
-  max-height: 100%;
+  max-height: 90%;
   background-color: var(--outer-background-color);
   border-radius: 6px;
   min-height: 30rem;

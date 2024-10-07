@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useFetchCurrentUserProfilePicture from "../../../hooks/useFetchCurrentUserProfilePicture";
+import { useManagePostsContext } from "../../../contexts/ManagePostsContext";
 import Button from "../../button/Button";
 import css from "../post.module.css";
 
@@ -9,7 +9,7 @@ type AddPostCommentProps = {
 
 export default function AddPostComment(props: AddPostCommentProps) {
   const { onAddPostComment } = props;
-  const { picture } = useFetchCurrentUserProfilePicture();
+  const { currentUserProfilePictureSrc: picture } = useManagePostsContext();
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
 
