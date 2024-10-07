@@ -1,0 +1,117 @@
+.login {
+  display: flex;
+}
+
+/*   SIGN UP   */
+
+.login__sign-up {
+  flex-basis: 42%;
+  height: 100vh;
+  background-color: var(--primary-color);
+  background: linear-gradient(to left, hsla(0, 0%, 20%, 0.914), hsla(0, 0%, 11%, 0.914), hsla(0, 100%, 0%, 0.914));
+  border-top-right-radius: 350px;
+  border-bottom-right-radius: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-right: 3rem;
+}
+
+.sign-up__header {
+  margin-bottom: 4rem;
+
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.sign-up__header p {
+  text-align: center;
+}
+
+.sign-up__btn {
+  width: 45%;
+  height: 5%;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  background-color: transparent;
+
+  color: #fff;
+  border: 1px solid #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sign-up__btn:hover {
+  box-shadow: 0px 0px 13px -1px rgba(255, 255, 255, 1);
+}
+
+/*    SIGN IN    */
+
+.login__sign-in {
+  flex-basis: 58%;
+  width: 60%;
+  padding-left: 12rem;
+  margin-bottom: 4rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.sign-in__btn {
+  width: 60%;
+  min-height: 7%;
+  margin-top: 1rem;
+
+  border-radius: 15px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  opacity: 0.92;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.sign-in__btn:hover {
+  box-shadow: 0px 0px 20px -4px var(--primary-color);
+  opacity: 0.9;
+}
+/*    SIGN IN HEADER   */
+
+.sign-in__header {
+  width: 60%;
+  margin-bottom: 3rem;
+  text-align: center;
+
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+
+/*    SIGN IN WARNING   */
+
+.sign-in__warning {
+  width: 60%;
+  padding-top: 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.warning__text {
+  color: red;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+
+.warning__icon {
+  padding-right: 20px;
+  position: absolute;
+  transform: translateX(-3.5rem);
+
+  color: red;
+}

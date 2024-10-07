@@ -1,0 +1,28 @@
+.user {
+  background-color: var(--outer-background-color);
+  display: flex;
+  column-gap: 0.7rem;
+}
+
+.user__profile {
+  flex-basis: 25%;
+  max-height: 7rem;
+  border-radius: 50%;
+}
+
+.user-container {
+  flex-basis: 75%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.relationship-status {
+  font-size: 0.9rem;
+  color: var(--secondary-darker-color);
+}

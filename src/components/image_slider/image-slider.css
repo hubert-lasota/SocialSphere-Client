@@ -1,0 +1,120 @@
+.image-slider {
+  width: 100vw;
+  height: 100vh;
+  z-index: 100001;
+  top: 0;
+  position: fixed;
+  overflow: hidden;
+  background-color: black;
+  display: flex;
+}
+
+
+.image-slider__left {
+  flex-basis: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-slider__left__btn {
+  padding: 1rem;
+  border-radius: 50%;
+  align-self: center;
+  background-color: transparent;
+  transition: background-color 100ms ease-in-out;
+}
+
+.image-slider__left__btn:hover {
+  cursor: pointer;
+  background-color: #c6c6c69d;
+}
+
+.image-slider__left__btn__icon {
+  stroke: #b3b3b3;
+  fill: #c3c3c3;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.image-slider__main {
+  flex-basis: 80%;
+  background-color: red;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.image-slider__main__img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-slider__main__counter {
+  position: absolute;
+  bottom: 0;
+}
+
+.image-slider__main__counter__dot {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.7rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+}
+
+.image-slider__main__counter__dot > * {
+  stroke: rgba(233, 233, 233, 0.524);
+  fill: rgb(11, 11, 11);
+}
+
+.image-slider__right {
+  flex-basis: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.image-slider__right__btn {
+  padding: 1rem;
+  border-radius: 50%;
+  align-self: center;
+  background-color: transparent;
+  transition: background-color 100ms ease-in-out;
+}
+
+.image-slider__right__btn:hover {
+  cursor: pointer;
+  background-color: #c6c6c69d;
+}
+
+.image-slider__right__btn__icon {
+  stroke: #b3b3b3;
+  fill: #c3c3c3;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+
+.image-slider__right__close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  padding: 0.4rem;
+  border-radius: 4px;
+}
+
+.image-slider__right__close-btn:hover {
+  cursor: pointer;
+  background-color: #c6c6c69d;
+}
+
+.image-slider__right__close-btn__icon {
+  color: #8d8d8d;
+}

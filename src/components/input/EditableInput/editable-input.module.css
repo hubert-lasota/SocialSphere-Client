@@ -1,0 +1,21 @@
+.editable {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 10px;
+}
+
+.editable__input-container {
+
+}
+
+.input-container__input {
+  background-color: transparent;
+}
+
+.editable__accept {
+  cursor: pointer;
+}
+
+.editable__edit {
+  cursor: pointer;
+}
